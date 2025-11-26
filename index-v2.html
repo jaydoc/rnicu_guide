@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>RNICU Guide – Clinical Protocols</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>RNICU Whitebook – Resident Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- React + ReactDOM (UMD) -->
+  <!-- React + ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel for JSX in this one file (fine for prototype) -->
+  <!-- Babel for JSX in this one file -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Tailwind CDN (fine for now; you can compile later for production) -->
+  <!-- Tailwind (CDN is fine for now) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Icons -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
 
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+    }
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      background-color: rgba(248, 250, 252, 0.96);
     }
     .card-shadow {
       box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.12),
-                  0 4px 6px -4px rgba(15, 23, 42, 0.1);
+        0 4px 6px -4px rgba(15, 23, 42, 0.08);
     }
     .tile-hover {
       transition: transform 0.18s ease, box-shadow 0.18s ease;
@@ -31,600 +41,635 @@
       transform: translateY(-2px);
       box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.25);
     }
-    .sticky-header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      backdrop-filter: blur(10px);
-      background-color: rgba(248, 250, 252, 0.92);
+    .prose-sm p + p {
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body class="bg-slate-50">
-<div id="root"></div>
+  <div id="root"></div>
 
-<!-- DATA: derived from WB-offline-edit.docx (you can expand this as much as you like) -->
-<script type="application/json" id="whitebook-data">
-{
-  "quickAccess": [
-    {
-      "id": "quick-reference",
-      "title": "Quick Reference",
-      "badge": "NEW",
-      "icon": "fa-bolt",
-      "bg": "bg-orange-100",
-      "iconBg": "bg-orange-500",
-      "description": "Fast access to admission, transfer, and discharge criteria.",
-      "sections": [
-        "Admissions – criteria for Well-Baby Nursery vs RNICU",
-        "Transfers – NBN / CCN transfer criteria",
-        "Discharges – standard discharge checklist"
-      ]
-    },
-    {
-      "id": "medications",
-      "title": "Medications",
-      "icon": "fa-pills",
-      "bg": "bg-yellow-100",
-      "iconBg": "bg-yellow-500",
-      "description": "Common NICU medications and dosing guides.",
-      "sections": [
-        "Resuscitation meds (e.g., epinephrine, saline bolus)",
-        "Antibiotics for sepsis and focal infections",
-        "Prostaglandins, iNO, and cardiovascular drugs"
-      ]
-    },
-    {
-      "id": "admissions",
-      "title": "Admissions",
-      "icon": "fa-door-open",
-      "bg": "bg-sky-100",
-      "iconBg": "bg-sky-500",
-      "description": "Admission criteria and initial evaluation.",
-      "sections": [
-        "Well-Baby Nursery criteria",
-        "RNICU admission indications",
-        "Initial admission orders and stabilization"
-      ]
-    },
-    {
-      "id": "transfers",
-      "title": "Transfers",
-      "icon": "fa-right-left",
-      "bg": "bg-emerald-100",
-      "iconBg": "bg-emerald-500",
-      "description": "NBN and CCN transfer criteria and timing.",
-      "sections": [
-        "Vital sign and respiratory stability requirements",
-        "Oxygen weaning and monitoring time thresholds",
-        "Glucose checks and hypothermia follow-up"
-      ]
-    },
-    {
-      "id": "procedures",
-      "title": "Procedures",
-      "icon": "fa-stethoscope",
-      "bg": "bg-rose-100",
-      "iconBg": "bg-rose-500",
-      "description": "Umbilical lines, LP, needle thoracentesis, and more.",
-      "sections": [
-        "Umbilical arterial and venous lines",
-        "Intubation and ventilation setup",
-        "LP, SPU, needle thoracentesis, exchange transfusion"
-      ]
-    },
-    {
-      "id": "resuscitation",
-      "title": "Resuscitation",
-      "icon": "fa-heart-pulse",
-      "bg": "bg-fuchsia-100",
-      "iconBg": "bg-fuchsia-500",
-      "description": "Neonatal resuscitation steps and dosing.",
-      "sections": [
-        "NRP sequence and ventilation checklist",
-        "Epinephrine, volume expansion, and troubleshooting",
-        "Post-resuscitation stabilization"
-      ]
-    },
-    {
-      "id": "learning-modules",
-      "title": "Learning Modules",
-      "icon": "fa-graduation-cap",
-      "bg": "bg-indigo-100",
-      "iconBg": "bg-indigo-500",
-      "description": "Self-paced resident learning modules.",
-      "link": "nicu-learning-modules.html",
-      "sections": [
-        "Core RNICU orientation modules",
-        "Problem-based clinical modules",
-        "Self-assessment and review questions"
-      ]
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    // IDs in your parsed whitebook JSON
+    const QUICK_TILES = [
+      {
+        id: "quick-reference",
+        title: "Quick Reference",
+        icon: "fa-bolt",
+        bg: "bg-orange-100",
+        iconBg: "bg-orange-500",
+        description: "Fast access to admission, transfer, and discharge criteria.",
+        // we'll show the whole Introduction section for this
+        sectionId: "introduction",
+        topicId: null,
+      },
+      {
+        id: "medications",
+        title: "Medications",
+        icon: "fa-pills",
+        bg: "bg-yellow-100",
+        iconBg: "bg-yellow-500",
+        description: "Common NICU medications and dosing guides.",
+        sectionId: "medications",
+        topicId: null,
+      },
+      {
+        id: "admissions",
+        title: "Admissions",
+        icon: "fa-door-open",
+        bg: "bg-sky-100",
+        iconBg: "bg-sky-500",
+        description: "Admission criteria and initial evaluation.",
+        sectionId: "introduction",
+        topicId: "admissions",
+      },
+      {
+        id: "transfers",
+        title: "Transfers",
+        icon: "fa-right-left",
+        bg: "bg-emerald-100",
+        iconBg: "bg-emerald-500",
+        description: "NBN / CCN → RNICU transfer criteria and timing.",
+        sectionId: "introduction",
+        topicId: "transfers",
+      },
+      {
+        id: "procedures",
+        title: "Procedures",
+        icon: "fa-stethoscope",
+        bg: "bg-rose-100",
+        iconBg: "bg-rose-500",
+        description: "Umbilical lines, LP, needle thoracentesis, and more.",
+        sectionId: "procedures",
+        topicId: null,
+      },
+      {
+        id: "resuscitation",
+        title: "Resuscitation",
+        icon: "fa-heart-pulse",
+        bg: "bg-fuchsia-100",
+        iconBg: "bg-fuchsia-500",
+        description: "Neonatal resuscitation algorithm and key steps.",
+        sectionId: "general-nicu-care",
+        topicId: "neonatal-resuscitation",
+      },
+      {
+        id: "learning-modules",
+        title: "Learning Modules",
+        icon: "fa-graduation-cap",
+        bg: "bg-indigo-100",
+        iconBg: "bg-indigo-500",
+        description: "Self-paced RNICU resident learning modules.",
+        sectionId: null,
+        topicId: null,
+        external: "nicu-learning-modules.html",
+      },
+    ];
+
+    function findSectionById(sections, id) {
+      return sections.find((s) => s.id === id) || null;
     }
-  ],
-  "systems": [
-    {
-      "id": "general-nicu-care",
-      "title": "GENERAL NICU CARE",
-      "topics": [
-        "Maternal Disorders Affecting Newborn",
-        "Neonatal Resuscitation",
-        "Gestational Age Assessment",
-        "Late Preterm Infant Care",
-        "Extremely Preterm Infant Care",
-        "Thermoregulation"
-      ]
-    },
-    {
-      "id": "fen",
-      "title": "FLUID, ELECTROLYTE & NUTRITION PROBLEMS",
-      "topics": [
-        "General goals of FEN management",
-        "Intravenous fluids",
-        "Common electrolyte disorders",
-        "Caloric intake calculations",
-        "Parenteral Nutrition",
-        "Enteral Nutrition",
-        "IUGR / SGA nutrition"
-      ]
-    },
-    {
-      "id": "respiratory",
-      "title": "RESPIRATORY PROBLEMS",
-      "topics": [
-        "Adequacy of Ventilation",
-        "Modes of Respiratory Support",
-        "RDS",
-        "PPHN",
-        "MAS / TTN",
-        "BPD and BPD-associated PHTN",
-        "Apnea",
-        "CDH and cystic lung lesions"
-      ]
-    },
-    {
-      "id": "infectious-disease",
-      "title": "INFECTIOUS DISEASE PROBLEMS",
-      "topics": [
-        "Early-onset and late-onset sepsis",
-        "Meningitis",
-        "UTI",
-        "Focal bacterial infections",
-        "GBS algorithm",
-        "Viral infections (e.g., CMV, HSV)",
-        "Syphilis and fungal infections"
-      ]
-    },
-    {
-      "id": "cardiovascular",
-      "title": "CARDIOVASCULAR PROBLEMS",
-      "topics": [
-        "Prenatal and Postnatal Circulation",
-        "CHD patterns of presentation",
-        "Prostaglandin infusion",
-        "Non-cyanotic CHD",
-        "Cyanotic CHD",
-        "Cardiac rhythm disorders",
-        "Shock and hypotension"
-      ]
-    },
-    {
-      "id": "gastrointestinal",
-      "title": "GASTROINTESTINAL PROBLEMS",
-      "topics": [
-        "Ileus / Feeding Intolerance",
-        "Necrotizing Enterocolitis",
-        "Spontaneous Intestinal Perforation",
-        "Conjugated Hyperbilirubinemia",
-        "Omphalocele & Gastroschisis",
-        "Duodenal atresia / malrotation / volvulus",
-        "Hirschsprung disease"
-      ]
-    },
-    {
-      "id": "nephrology",
-      "title": "NEPHROLOGY PROBLEMS",
-      "topics": [
-        "Common renal labs",
-        "Acute Kidney Injury",
-        "CAKUT",
-        "Hypertension",
-        "Renal Tubular Acidosis",
-        "Nephrocalcinosis",
-        "Hematuria"
-      ]
-    },
-    {
-      "id": "neurology",
-      "title": "NEUROLOGICAL PROBLEMS",
-      "topics": [
-        "Intraventricular Hemorrhage",
-        "Seizures",
-        "Hypoxic-Ischemic Encephalopathy",
-        "Retinopathy of Prematurity",
-        "Birth Trauma",
-        "Neural Tube Defects"
-      ]
-    },
-    {
-      "id": "hematology",
-      "title": "HEMATOLOGIC PROBLEMS",
-      "topics": [
-        "Unconjugated Hyperbilirubinemia",
-        "Anemia",
-        "Polycythemia",
-        "Neonatal Thrombocytopenia",
-        "Vitamin K deficiency",
-        "DIC and thrombosis",
-        "Blood products"
-      ]
-    },
-    {
-      "id": "endocrine",
-      "title": "ENDOCRINE & METABOLIC PROBLEMS",
-      "topics": [
-        "Hypoglycemia",
-        "Hyperglycemia",
-        "Osteopenia of Prematurity",
-        "CAH",
-        "Bilateral Cryptorchidism",
-        "Disorders of Sexual Development",
-        "Inborn Errors of Metabolism"
-      ]
-    },
-    {
-      "id": "genetic",
-      "title": "NAS, IEM & GENETIC PROBLEMS",
-      "topics": [
-        "Neonatal Abstinence Syndrome",
-        "CHDs in genetic syndromes",
-        "Congenital renal syndromes",
-        "Nonimmune hydrops"
-      ]
-    },
-    {
-      "id": "procedures-system",
-      "title": "PROCEDURES",
-      "topics": [
-        "Umbilical Lines",
-        "Intubation",
-        "Suprapubic Bladder Aspiration",
-        "Lumbar Puncture",
-        "Needle Thoracentesis",
-        "Exchange Transfusions"
-      ]
-    },
-    {
-      "id": "medications-system",
-      "title": "MEDICATIONS",
-      "topics": [
-        "Common NICU medications",
-        "Antimicrobial dosing",
-        "Cardiovascular agents",
-        "Sedation and analgesia",
-        "Resuscitation medications"
-      ]
-    }
-  ]
-}
-</script>
 
-<!-- APP -->
-<script type="text/babel">
-  const { useState, useMemo } = React;
+    function walkSectionForTopics(section) {
+      const topics = [];
+      if (!section || !section.children) return topics;
 
-  function useWhitebookData() {
-    const raw = document.getElementById("whitebook-data").textContent;
-    return JSON.parse(raw);
-  }
-
-  function App() {
-    const data = useWhitebookData();
-    const [search, setSearch] = useState("");
-    const [activeSection, setActiveSection] = useState(null);
-    const [activeType, setActiveType] = useState(null); // "quick" or "system"
-
-    const searchResults = useMemo(() => {
-      const q = search.trim().toLowerCase();
-      if (!q) return [];
-      const results = [];
-
-      data.quickAccess.forEach(tile => {
-        const haystack = [
-          tile.title,
-          tile.description || "",
-          ...(tile.sections || [])
-        ].join(" ").toLowerCase();
-        if (haystack.includes(q)) {
-          results.push({
-            type: "quick",
-            id: tile.id,
-            title: tile.title,
-            parent: "Quick Access"
+      function walk(node, parentH2Title = null) {
+        if (!node) return;
+        if (node.type === "h2") {
+          parentH2Title = node.title;
+        }
+        if (node.type === "h3") {
+          topics.push({
+            id: node.id,
+            title: node.title,
+            parentH2Title,
+            node,
           });
         }
-      });
-
-      data.systems.forEach(sys => {
-        const titleMatch = sys.title.toLowerCase().includes(q);
-        const topicsMatch = (sys.topics || []).some(t => t.toLowerCase().includes(q));
-        if (titleMatch || topicsMatch) {
-          results.push({
-            type: "system",
-            id: sys.id,
-            title: sys.title,
-            parent: "System"
-          });
+        if (Array.isArray(node.children)) {
+          node.children.forEach((child) => walk(child, parentH2Title));
         }
-      });
-
-      return results.slice(0, 8);
-    }, [search, data]);
-
-    const handleOpenQuick = (tile) => {
-      if (tile.link) {
-        // Treat Learning Modules as an external link
-        window.location.href = tile.link;
-        return;
       }
-      setActiveType("quick");
-      setActiveSection(tile);
-    };
 
-    const handleOpenSystem = (sys) => {
-      setActiveType("system");
-      setActiveSection(sys);
-    };
+      section.children.forEach((child) => walk(child, null));
+      return topics;
+    }
 
-    return (
-      <div className="min-h-screen text-slate-900">
-        {/* Top bar */}
-        <header className="sticky-header border-b border-slate-200">
-          <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white">
+    function findTopicById(sections, topicId) {
+      for (const section of sections) {
+        const stack = [...(section.children || [])];
+        while (stack.length) {
+          const node = stack.pop();
+          if (node.type === "h3" && node.id === topicId) {
+            return { section, topic: node };
+          }
+          if (Array.isArray(node.children)) {
+            stack.push(...node.children);
+          }
+        }
+      }
+      return { section: null, topic: null };
+    }
+
+    function flattenTopicContent(topicNode) {
+      if (!topicNode || !Array.isArray(topicNode.children)) return [];
+      const blocks = [];
+      function walk(node) {
+        if (!node) return;
+        if (node.type === "text") {
+          blocks.push(node.content);
+        }
+        if (Array.isArray(node.children)) {
+          node.children.forEach(walk);
+        }
+      }
+      topicNode.children.forEach(walk);
+      return blocks;
+    }
+
+    function App() {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+
+      const [search, setSearch] = useState("");
+      const [view, setView] = useState("home"); // home | browse | search | detail
+
+      const [activeSection, setActiveSection] = useState(null);
+      const [activeTopic, setActiveTopic] = useState(null);
+
+      useEffect(() => {
+        fetch("whitebook-data.json")
+          .then((res) => {
+            if (!res.ok) throw new Error("Failed to load whitebook-data.json");
+            return res.json();
+          })
+          .then((json) => {
+            setData(json);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.error(err);
+            setError(err.message || "Error loading data");
+            setLoading(false);
+          });
+      }, []);
+
+      const handleOpenSection = (sectionId) => {
+        if (!data) return;
+        const section = findSectionById(data.sections, sectionId);
+        setActiveSection(section);
+        setActiveTopic(null);
+        setView("detail");
+      };
+
+      const handleOpenTopic = (sectionId, topicId) => {
+        if (!data) return;
+        if (sectionId) {
+          const section = findSectionById(data.sections, sectionId);
+          setActiveSection(section || null);
+        }
+        if (topicId) {
+          const { section, topic } = findTopicById(data.sections, topicId);
+          setActiveSection(section || null);
+          setActiveTopic(topic || null);
+        } else {
+          setActiveTopic(null);
+        }
+        setView("detail");
+      };
+
+      const searchResults = useMemo(() => {
+        if (!data) return [];
+        const q = search.trim().toLowerCase();
+        if (!q) return [];
+
+        const results = [];
+        // Use searchIndex if present
+        if (data.searchIndex && Array.isArray(data.searchIndex)) {
+          for (const item of data.searchIndex) {
+            if (
+              (item.type === "h3" || item.type === "h2") &&
+              (item.title || "").toLowerCase().includes(q)
+            ) {
+              results.push({
+                id: item.id,
+                title: item.title,
+                path: item.path,
+              });
+            } else if (
+              item.type === "content" &&
+              (item.content || "").toLowerCase().includes(q)
+            ) {
+              results.push({
+                id: item.id,
+                title: item.title,
+                path: item.path,
+              });
+            }
+            if (results.length >= 15) break;
+          }
+        }
+        return results;
+      }, [search, data]);
+
+      if (loading) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-slate-50">
+            <div className="flex flex-col items-center gap-3 text-slate-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-600 text-white">
                 <i className="fa-solid fa-baby"></i>
               </div>
-              <div>
-                <div className="text-sm font-semibold text-slate-900 leading-tight">
-                  RNICU Guide
+              <p className="text-sm font-medium">Loading RNICU Whitebook…</p>
+            </div>
+          </div>
+        );
+      }
+
+      if (error || !data) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-slate-50">
+            <div className="max-w-md rounded-2xl bg-white p-6 card-shadow text-center">
+              <p className="text-sm font-semibold text-rose-600 mb-1">
+                Could not load whitebook data
+              </p>
+              <p className="text-xs text-slate-600 mb-3">
+                Make sure <code>whitebook-data.json</code> is in the same folder
+                as this file and is valid JSON.
+              </p>
+              <p className="text-[11px] text-slate-500">{String(error)}</p>
+            </div>
+          </div>
+        );
+      }
+
+      const systems = data.sections.filter((s) => s.type === "h1");
+      const introduction = data.sections.find((s) => s.id === "introduction");
+
+      return (
+        <div className="min-h-screen bg-slate-50 text-slate-900">
+          {/* Header */}
+          <header className="sticky-header border-b border-slate-200">
+            <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white">
+                  <i className="fa-solid fa-baby" />
                 </div>
-                <div className="text-xs text-slate-500">
-                  Clinical Protocols
+                <div>
+                  <div className="text-sm font-semibold leading-tight">
+                    RNICU Resident Whitebook
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Clinical protocols & quick reference
+                  </div>
                 </div>
+              </div>
+              <div className="hidden sm:flex items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-medium text-emerald-700 border border-emerald-100">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+                  Internal Use Only
+                </span>
               </div>
             </div>
-            <button
-              className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-amber-600"
-              onClick={() => {
-                const quickRef = data.quickAccess.find(q => q.id === "quick-reference");
-                if (quickRef) {
-                  setActiveType("quick");
-                  setActiveSection(quickRef);
-                }
-              }}
-            >
-              <i className="fa-solid fa-bolt text-xs"></i>
-              Quick Ref
-            </button>
-          </div>
-        </header>
 
-        <main className="mx-auto max-w-6xl px-4 pb-10 pt-6 grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1.1fr)]">
-          {/* Left column: hero + cards */}
-          <div className="space-y-6">
-            {/* Welcome card + search */}
-            <section className="card-shadow rounded-2xl bg-white px-5 py-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h1 className="text-lg font-semibold text-slate-900">
-                    Welcome to the RNICU Guide
-                  </h1>
-                  <p className="mt-1 text-sm text-slate-600 max-w-xl">
-                    Your interactive clinical protocol resource. Use the search,
-                    Quick Access, or system-based browsing to find what you need fast.
-                  </p>
-                </div>
-              </div>
-
-              {/* Search */}
-              <div className="mt-4 relative">
+            {/* Search bar */}
+            <div className="mx-auto max-w-6xl px-4 pb-3">
+              <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <i className="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
+                  <i className="fa-solid fa-magnifying-glass text-slate-400 text-xs" />
                 </div>
                 <input
                   type="search"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2 text-sm focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                  placeholder="Search protocols, medications, procedures..."
                   value={search}
-                  onChange={e => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setView(e.target.value ? "search" : "home");
+                  }}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-8 pr-3 py-2 text-sm focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Search topics or content (e.g. 'Infant of diabetic mother', 'PPHN', 'hypoglycemia')…"
                 />
-                {searchResults.length > 0 && (
-                  <div className="absolute z-20 mt-1 w-full rounded-xl border border-slate-200 bg-white text-sm shadow-lg">
-                    {searchResults.map((r) => (
+                {search && searchResults.length > 0 && (
+                  <div className="absolute z-30 mt-1 w-full rounded-xl border border-slate-200 bg-white text-xs shadow-lg max-h-72 overflow-y-auto">
+                    {searchResults.map((r, idx) => (
                       <button
-                        key={r.type + "-" + r.id}
-                        className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-slate-50"
+                        key={idx}
+                        className="flex w-full items-start justify-between px-3 py-2 hover:bg-slate-50 text-left"
                         onClick={() => {
-                          if (r.type === "quick") {
-                            const tile = data.quickAccess.find(q => q.id === r.id);
-                            if (tile) handleOpenQuick(tile);
-                          } else {
-                            const sys = data.systems.find(s => s.id === r.id);
-                            if (sys) handleOpenSystem(sys);
+                          const { section, topic } = findTopicById(
+                            data.sections,
+                            r.id
+                          );
+                          if (section) {
+                            setActiveSection(section);
+                            setActiveTopic(topic);
+                            setView("detail");
                           }
                           setSearch("");
                         }}
                       >
-                        <span>{r.title}</span>
-                        <span className="text-xs text-slate-400">{r.parent}</span>
+                        <div>
+                          <div className="font-semibold">{r.title}</div>
+                          <div className="text-[10px] text-slate-500">
+                            {r.path}
+                          </div>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[9px] text-slate-400 mt-1" />
                       </button>
                     ))}
+                    {searchResults.length === 0 && (
+                      <div className="px-3 py-2 text-[11px] text-slate-500">
+                        No results
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            </section>
+            </div>
+          </header>
 
-            {/* Quick Access */}
-            <section className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-slate-800">
-                  Quick Access
-                </h2>
-              </div>
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {data.quickAccess.map(tile => (
-                  <button
-                    key={tile.id}
-                    onClick={() => handleOpenQuick(tile)}
-                    className={`tile-hover flex items-center gap-3 rounded-2xl border border-slate-100 ${tile.bg} p-3 text-left`}
-                  >
-                    <div className={`flex h-9 w-9 items-center justify-center rounded-xl text-white ${tile.iconBg}`}>
-                      <i className={`fa-solid ${tile.icon} text-sm`}></i>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-slate-900">
-                          {tile.title}
-                        </p>
-                        {tile.badge && (
-                          <span className="rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-                            {tile.badge}
-                          </span>
-                        )}
-                      </div>
-                      {tile.description && (
-                        <p className="mt-0.5 line-clamp-2 text-xs text-slate-600">
-                          {tile.description}
-                        </p>
-                      )}
-                    </div>
-                    <i className="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* Browse by System */}
-            <section className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-slate-800">
-                  Browse by System
-                </h2>
-                <span className="text-xs text-indigo-600 font-medium">
-                  View All →
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                {data.systems.map(system => (
-                  <button
-                    key={system.id}
-                    onClick={() => handleOpenSystem(system)}
-                    className="tile-hover flex w-full items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-3 text-left"
-                  >
-                    <div>
-                      <p className="text-xs font-semibold text-slate-900">
-                        {system.title}
-                      </p>
-                      <p className="mt-0.5 text-[11px] text-slate-500">
-                        {(system.topics || []).length} topics
-                      </p>
-                    </div>
-                    <i className="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-                  </button>
-                ))}
-              </div>
-            </section>
-          </div>
-
-          {/* Right column: detail panel */}
-          <aside className="space-y-3">
-            <section className="card-shadow rounded-2xl bg-white px-5 py-4 h-full">
-              {!activeSection && (
-                <div className="flex h-full flex-col items-center justify-center text-center text-sm text-slate-500">
-                  <i className="fa-regular fa-note-sticky mb-2 text-xl text-slate-300"></i>
-                  <p className="font-medium text-slate-700">No section selected</p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    Choose a tile on the left to see key topics and checklists here.
-                  </p>
+          {/* Main layout */}
+          <main className="mx-auto max-w-6xl px-4 pb-10 pt-5 grid gap-6 lg:grid-cols-[minmax(0,1.8fr)_minmax(0,1.2fr)]">
+            {/* Left column */}
+            <div className="space-y-6">
+              {/* Welcome card */}
+              <section className="card-shadow rounded-2xl bg-white px-5 py-4">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h1 className="text-lg font-semibold text-slate-900">
+                      Welcome to the RNICU Resident Guide
+                    </h1>
+                    <p className="mt-1 max-w-xl text-sm text-slate-600">
+                      This digital whitebook mirrors your full 119-page RNICU
+                      guide. Use the Quick Access tiles, browse by system, or
+                      search to jump straight to the content you need at the
+                      bedside.
+                    </p>
+                  </div>
+                  <div className="hidden md:flex flex-col items-end gap-1">
+                    <span className="rounded-full bg-indigo-50 px-2 py-1 text-[10px] font-medium text-indigo-700 border border-indigo-100">
+                      Bedside first. App second.
+                    </span>
+                  </div>
                 </div>
-              )}
+              </section>
 
-              {activeSection && (
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                        {activeType === "quick" ? "Quick Access" : "System"}
-                      </p>
-                      <h2 className="mt-0.5 text-sm font-semibold text-slate-900">
-                        {activeSection.title}
-                      </h2>
-                    </div>
+              {/* Quick Access */}
+              <section className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-slate-800">
+                    Quick Access
+                  </h2>
+                </div>
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {QUICK_TILES.map((tile) => (
                     <button
-                      className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] text-slate-600 hover:bg-slate-100"
+                      key={tile.id}
+                      className={`tile-hover flex items-center gap-3 rounded-2xl border border-slate-100 ${tile.bg} p-3 text-left`}
                       onClick={() => {
-                        setActiveSection(null);
-                        setActiveType(null);
+                        if (tile.external) {
+                          window.location.href = tile.external;
+                          return;
+                        }
+                        if (tile.sectionId || tile.topicId) {
+                          handleOpenTopic(tile.sectionId, tile.topicId);
+                        }
                       }}
                     >
-                      Clear
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded-xl text-white ${tile.iconBg}`}
+                      >
+                        <i className={`fa-solid ${tile.icon} text-sm`} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-slate-900">
+                            {tile.title}
+                          </p>
+                          {tile.id === "quick-reference" && (
+                            <span className="rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                              Core
+                            </span>
+                          )}
+                        </div>
+                        {tile.description && (
+                          <p className="mt-0.5 line-clamp-2 text-[11px] text-slate-600">
+                            {tile.description}
+                          </p>
+                        )}
+                      </div>
+                      <i className="fa-solid fa-chevron-right text-[9px] text-slate-400" />
                     </button>
-                  </div>
-
-                  {activeType === "quick" && (
-                    <div className="space-y-2">
-                      {activeSection.description && (
-                        <p className="text-xs text-slate-600">
-                          {activeSection.description}
-                        </p>
-                      )}
-                      <ul className="mt-1 space-y-1.5 text-xs text-slate-700">
-                        {(activeSection.sections || []).map((item, idx) => (
-                          <li key={idx} className="flex gap-2">
-                            <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      {activeSection.id === "learning-modules" && activeSection.link && (
-                        <a
-                          href={activeSection.link}
-                          className="mt-3 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
-                        >
-                          Open Learning Modules
-                          <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                        </a>
-                      )}
-                    </div>
-                  )}
-
-                  {activeType === "system" && (
-                    <div className="space-y-2">
-                      <p className="text-xs text-slate-600">
-                        Topics from the RNICU whitebook section.
-                      </p>
-                      <ul className="mt-1 space-y-1.5 text-xs text-slate-700">
-                        {(activeSection.topics || []).map((topic, idx) => (
-                          <li key={idx} className="flex gap-2">
-                            <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                            <span>{topic}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  ))}
                 </div>
-              )}
-            </section>
-          </aside>
-        </main>
-      </div>
-    );
-  }
+              </section>
 
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(<App />);
-</script>
+              {/* Browse by System */}
+              <section className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-slate-800">
+                    Browse by System
+                  </h2>
+                </div>
+                <div className="space-y-2">
+                  {systems.map((sys) => {
+                    const topics = walkSectionForTopics(sys);
+                    return (
+                      <button
+                        key={sys.id}
+                        onClick={() => handleOpenSection(sys.id)}
+                        className="tile-hover flex w-full items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-3 text-left"
+                      >
+                        <div>
+                          <p className="text-xs font-semibold text-slate-900">
+                            {sys.title}
+                          </p>
+                          <p className="mt-0.5 text-[11px] text-slate-500">
+                            {topics.length} topics
+                          </p>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[9px] text-slate-400" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            </div>
+
+            {/* Right column: Detail panel */}
+            <aside className="space-y-3">
+              <section className="card-shadow rounded-2xl bg-white px-5 py-4 h-full">
+                {!activeSection && view !== "search" && (
+                  <div className="flex h-full flex-col items-center justify-center text-center text-sm text-slate-500">
+                    <i className="fa-regular fa-note-sticky mb-2 text-xl text-slate-300" />
+                    <p className="font-medium text-slate-700">
+                      No topic selected
+                    </p>
+                    <p className="mt-1 text-[11px] text-slate-500">
+                      Choose a Quick Access tile or a system on the left to see
+                      full whitebook content here.
+                    </p>
+                  </div>
+                )}
+
+                {/* Search-only view if nothing selected */}
+                {view === "search" && !activeSection && (
+                  <div className="space-y-3">
+                    <h2 className="text-sm font-semibold text-slate-900">
+                      Search
+                    </h2>
+                    {searchResults.length === 0 ? (
+                      <p className="text-xs text-slate-500">
+                        No results yet. Try another term or broaden your search.
+                      </p>
+                    ) : (
+                      <p className="text-xs text-slate-500">
+                        Showing{" "}
+                        <span className="font-semibold">
+                          {searchResults.length}
+                        </span>{" "}
+                        result(s). Click a result above to open the topic.
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {activeSection && (
+                  <div className="space-y-4">
+                    {/* Section header */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-indigo-600">
+                          {activeSection.type === "h1"
+                            ? "System"
+                            : "Section"}
+                        </p>
+                        <h2 className="mt-0.5 text-sm font-semibold text-slate-900">
+                          {activeSection.title}
+                        </h2>
+                      </div>
+                      <button
+                        className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] text-slate-600 hover:bg-slate-100"
+                        onClick={() => {
+                          setActiveSection(null);
+                          setActiveTopic(null);
+                          setView("home");
+                        }}
+                      >
+                        Clear
+                      </button>
+                    </div>
+
+                    {/* Topic list for this section */}
+                    <SectionTopicList
+                      section={activeSection}
+                      activeTopic={activeTopic}
+                      onTopicClick={(topic) => {
+                        setActiveTopic(topic);
+                      }}
+                    />
+
+                    {/* Topic content */}
+                    <TopicContent section={activeSection} topic={activeTopic} />
+                  </div>
+                )}
+              </section>
+            </aside>
+          </main>
+        </div>
+      );
+    }
+
+    function SectionTopicList({ section, activeTopic, onTopicClick }) {
+      const topics = walkSectionForTopics(section);
+      if (!topics.length) return null;
+      return (
+        <div className="border border-slate-100 rounded-xl bg-slate-50 px-3 py-2 max-h-40 overflow-y-auto">
+          <p className="text-[11px] font-semibold text-slate-700 mb-1">
+            Topics in this section
+          </p>
+          <div className="space-y-1">
+            {topics.map((t) => (
+              <button
+                key={t.id}
+                className={`w-full text-left rounded-lg px-2 py-1 text-[11px] ${
+                  activeTopic && activeTopic.id === t.id
+                    ? "bg-indigo-100 text-indigo-800 font-semibold"
+                    : "hover:bg-slate-100 text-slate-700"
+                }`}
+                onClick={() => onTopicClick(t.node)}
+              >
+                {t.parentH2Title && (
+                  <span className="mr-1 text-[10px] text-slate-400">
+                    [{t.parentH2Title}]
+                  </span>
+                )}
+                {t.title}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function TopicContent({ section, topic }) {
+      // If a specific h3 topic is selected, show that; otherwise show a preface for the section.
+      if (!section) return null;
+
+      if (!topic) {
+        // show a short “section intro” by pulling the first few text nodes
+        const introBlocks = [];
+        function collectIntro(node) {
+          if (!node || introBlocks.length >= 4) return;
+          if (node.type === "text" && node.content) {
+            introBlocks.push(node.content);
+          }
+          if (Array.isArray(node.children)) {
+            node.children.forEach(collectIntro);
+          }
+        }
+        (section.children || []).forEach(collectIntro);
+
+        if (!introBlocks.length) return null;
+
+        return (
+          <div className="mt-3 border-t border-slate-100 pt-3">
+            <h3 className="text-xs font-semibold text-slate-800 mb-1">
+              Overview
+            </h3>
+            <div className="prose-sm text-xs text-slate-800 space-y-1">
+              {introBlocks.map((p, idx) => (
+                <p key={idx}>{p}</p>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      const blocks = flattenTopicContent(topic);
+      return (
+        <div className="mt-3 border-t border-slate-100 pt-3">
+          <h3 className="text-xs font-semibold text-slate-800 mb-1">
+            {topic.title}
+          </h3>
+          <div className="prose-sm text-xs text-slate-800 space-y-1 max-h-80 overflow-y-auto">
+            {blocks.length === 0 && (
+              <p className="text-slate-500">
+                No content found for this topic in the JSON.
+              </p>
+            )}
+            {blocks.map((p, idx) => (
+              <p key={idx}>{p}</p>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
 </body>
 </html>
