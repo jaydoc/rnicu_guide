@@ -1,842 +1,630 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RNICU Resident Guide</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .section-card {
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-        .section-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -10px rgba(15, 23, 42, 0.3);
-        }
-        .content-card {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            background-color: rgba(249, 250, 251, 0.95);
-            backdrop-filter: blur(8px);
-        }
-        .ai-bubble {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-        }
-        .ai-message {
-            background: #eef2ff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>RNICU Guide – Clinical Protocols</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- React + ReactDOM (UMD) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel for JSX in this one file (fine for prototype) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CDN (fine for now; you can compile later for production) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .card-shadow {
+      box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.12),
+                  0 4px 6px -4px rgba(15, 23, 42, 0.1);
+    }
+    .tile-hover {
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .tile-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.25);
+    }
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      background-color: rgba(248, 250, 252, 0.92);
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
-    <div id="root"></div>
+<body class="bg-slate-50">
+<div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+<!-- DATA: derived from WB-offline-edit.docx (you can expand this as much as you like) -->
+<script type="application/json" id="whitebook-data">
+{
+  "quickAccess": [
+    {
+      "id": "quick-reference",
+      "title": "Quick Reference",
+      "badge": "NEW",
+      "icon": "fa-bolt",
+      "bg": "bg-orange-100",
+      "iconBg": "bg-orange-500",
+      "description": "Fast access to admission, transfer, and discharge criteria.",
+      "sections": [
+        "Admissions – criteria for Well-Baby Nursery vs RNICU",
+        "Transfers – NBN / CCN transfer criteria",
+        "Discharges – standard discharge checklist"
+      ]
+    },
+    {
+      "id": "medications",
+      "title": "Medications",
+      "icon": "fa-pills",
+      "bg": "bg-yellow-100",
+      "iconBg": "bg-yellow-500",
+      "description": "Common NICU medications and dosing guides.",
+      "sections": [
+        "Resuscitation meds (e.g., epinephrine, saline bolus)",
+        "Antibiotics for sepsis and focal infections",
+        "Prostaglandins, iNO, and cardiovascular drugs"
+      ]
+    },
+    {
+      "id": "admissions",
+      "title": "Admissions",
+      "icon": "fa-door-open",
+      "bg": "bg-sky-100",
+      "iconBg": "bg-sky-500",
+      "description": "Admission criteria and initial evaluation.",
+      "sections": [
+        "Well-Baby Nursery criteria",
+        "RNICU admission indications",
+        "Initial admission orders and stabilization"
+      ]
+    },
+    {
+      "id": "transfers",
+      "title": "Transfers",
+      "icon": "fa-right-left",
+      "bg": "bg-emerald-100",
+      "iconBg": "bg-emerald-500",
+      "description": "NBN and CCN transfer criteria and timing.",
+      "sections": [
+        "Vital sign and respiratory stability requirements",
+        "Oxygen weaning and monitoring time thresholds",
+        "Glucose checks and hypothermia follow-up"
+      ]
+    },
+    {
+      "id": "procedures",
+      "title": "Procedures",
+      "icon": "fa-stethoscope",
+      "bg": "bg-rose-100",
+      "iconBg": "bg-rose-500",
+      "description": "Umbilical lines, LP, needle thoracentesis, and more.",
+      "sections": [
+        "Umbilical arterial and venous lines",
+        "Intubation and ventilation setup",
+        "LP, SPU, needle thoracentesis, exchange transfusion"
+      ]
+    },
+    {
+      "id": "resuscitation",
+      "title": "Resuscitation",
+      "icon": "fa-heart-pulse",
+      "bg": "bg-fuchsia-100",
+      "iconBg": "bg-fuchsia-500",
+      "description": "Neonatal resuscitation steps and dosing.",
+      "sections": [
+        "NRP sequence and ventilation checklist",
+        "Epinephrine, volume expansion, and troubleshooting",
+        "Post-resuscitation stabilization"
+      ]
+    },
+    {
+      "id": "learning-modules",
+      "title": "Learning Modules",
+      "icon": "fa-graduation-cap",
+      "bg": "bg-indigo-100",
+      "iconBg": "bg-indigo-500",
+      "description": "Self-paced resident learning modules.",
+      "link": "nicu-learning-modules.html",
+      "sections": [
+        "Core RNICU orientation modules",
+        "Problem-based clinical modules",
+        "Self-assessment and review questions"
+      ]
+    }
+  ],
+  "systems": [
+    {
+      "id": "general-nicu-care",
+      "title": "GENERAL NICU CARE",
+      "topics": [
+        "Maternal Disorders Affecting Newborn",
+        "Neonatal Resuscitation",
+        "Gestational Age Assessment",
+        "Late Preterm Infant Care",
+        "Extremely Preterm Infant Care",
+        "Thermoregulation"
+      ]
+    },
+    {
+      "id": "fen",
+      "title": "FLUID, ELECTROLYTE & NUTRITION PROBLEMS",
+      "topics": [
+        "General goals of FEN management",
+        "Intravenous fluids",
+        "Common electrolyte disorders",
+        "Caloric intake calculations",
+        "Parenteral Nutrition",
+        "Enteral Nutrition",
+        "IUGR / SGA nutrition"
+      ]
+    },
+    {
+      "id": "respiratory",
+      "title": "RESPIRATORY PROBLEMS",
+      "topics": [
+        "Adequacy of Ventilation",
+        "Modes of Respiratory Support",
+        "RDS",
+        "PPHN",
+        "MAS / TTN",
+        "BPD and BPD-associated PHTN",
+        "Apnea",
+        "CDH and cystic lung lesions"
+      ]
+    },
+    {
+      "id": "infectious-disease",
+      "title": "INFECTIOUS DISEASE PROBLEMS",
+      "topics": [
+        "Early-onset and late-onset sepsis",
+        "Meningitis",
+        "UTI",
+        "Focal bacterial infections",
+        "GBS algorithm",
+        "Viral infections (e.g., CMV, HSV)",
+        "Syphilis and fungal infections"
+      ]
+    },
+    {
+      "id": "cardiovascular",
+      "title": "CARDIOVASCULAR PROBLEMS",
+      "topics": [
+        "Prenatal and Postnatal Circulation",
+        "CHD patterns of presentation",
+        "Prostaglandin infusion",
+        "Non-cyanotic CHD",
+        "Cyanotic CHD",
+        "Cardiac rhythm disorders",
+        "Shock and hypotension"
+      ]
+    },
+    {
+      "id": "gastrointestinal",
+      "title": "GASTROINTESTINAL PROBLEMS",
+      "topics": [
+        "Ileus / Feeding Intolerance",
+        "Necrotizing Enterocolitis",
+        "Spontaneous Intestinal Perforation",
+        "Conjugated Hyperbilirubinemia",
+        "Omphalocele & Gastroschisis",
+        "Duodenal atresia / malrotation / volvulus",
+        "Hirschsprung disease"
+      ]
+    },
+    {
+      "id": "nephrology",
+      "title": "NEPHROLOGY PROBLEMS",
+      "topics": [
+        "Common renal labs",
+        "Acute Kidney Injury",
+        "CAKUT",
+        "Hypertension",
+        "Renal Tubular Acidosis",
+        "Nephrocalcinosis",
+        "Hematuria"
+      ]
+    },
+    {
+      "id": "neurology",
+      "title": "NEUROLOGICAL PROBLEMS",
+      "topics": [
+        "Intraventricular Hemorrhage",
+        "Seizures",
+        "Hypoxic-Ischemic Encephalopathy",
+        "Retinopathy of Prematurity",
+        "Birth Trauma",
+        "Neural Tube Defects"
+      ]
+    },
+    {
+      "id": "hematology",
+      "title": "HEMATOLOGIC PROBLEMS",
+      "topics": [
+        "Unconjugated Hyperbilirubinemia",
+        "Anemia",
+        "Polycythemia",
+        "Neonatal Thrombocytopenia",
+        "Vitamin K deficiency",
+        "DIC and thrombosis",
+        "Blood products"
+      ]
+    },
+    {
+      "id": "endocrine",
+      "title": "ENDOCRINE & METABOLIC PROBLEMS",
+      "topics": [
+        "Hypoglycemia",
+        "Hyperglycemia",
+        "Osteopenia of Prematurity",
+        "CAH",
+        "Bilateral Cryptorchidism",
+        "Disorders of Sexual Development",
+        "Inborn Errors of Metabolism"
+      ]
+    },
+    {
+      "id": "genetic",
+      "title": "NAS, IEM & GENETIC PROBLEMS",
+      "topics": [
+        "Neonatal Abstinence Syndrome",
+        "CHDs in genetic syndromes",
+        "Congenital renal syndromes",
+        "Nonimmune hydrops"
+      ]
+    },
+    {
+      "id": "procedures-system",
+      "title": "PROCEDURES",
+      "topics": [
+        "Umbilical Lines",
+        "Intubation",
+        "Suprapubic Bladder Aspiration",
+        "Lumbar Puncture",
+        "Needle Thoracentesis",
+        "Exchange Transfusions"
+      ]
+    },
+    {
+      "id": "medications-system",
+      "title": "MEDICATIONS",
+      "topics": [
+        "Common NICU medications",
+        "Antimicrobial dosing",
+        "Cardiovascular agents",
+        "Sedation and analgesia",
+        "Resuscitation medications"
+      ]
+    }
+  ]
+}
+</script>
 
-        // Password configuration
-        const CORRECT_PASSWORD = "rnicu2024";
+<!-- APP -->
+<script type="text/babel">
+  const { useState, useMemo } = React;
 
-        // Load whitebook data
-        const WHITEBOOK_DATA = {"sections": [{"id": "introduction", "title": "Introduction & Overview", "description": "Welcome to the RNICU White Book for Pediatric Residents. This guide is designed to support you during your rotation with practical, concise, and clinically relevant information.", "children": [{"id": "rotation-overview", "title": "Rotation Overview", "description": "What to expect during your RNICU rotation.", "content": [{"type": "text", "content": "Welcome to the Regional Neonatal Intensive Care Unit (RNICU). During this rotation, you will care for critically ill neonates and learn key skills in neonatal resuscitation, stabilization, and ongoing management."}, {"type": "list", "style": "disc", "title": "Goals of the Rotation", "items": ["Develop a structured approach to the assessment and management of sick neonates.", "Become familiar with common RNICU protocols and pathways.", "Understand when to escalate care and involve subspecialty services.", "Work effectively within a multidisciplinary NICU team."]}, {"type": "list", "style": "decimal", "title": "Your Responsibilities", "items": ["Pre-rounding and presenting on assigned patients.", "Writing daily notes and orders under supervision.", "Participating in family discussions and care conferences, as appropriate.", "Attending and participating in resuscitations, admissions, and procedures.", "Communicating effectively with nursing staff and respiratory therapists."]}]}, {"id": "daily-schedule", "title": "Daily Schedule & Workflow", "description": "Structure of a typical RNICU day.", "content": [{"type": "text", "content": "The daily flow in the RNICU can be busy and dynamic. Having a mental map of the day will help you stay organized and reduce stress."}, {"type": "timeline", "title": "Typical RNICU Weekday Schedule", "items": [{"time": "06:30\u201307:00", "title": "Pre-rounding", "details": ["Review overnight events in the chart.", "Check vital signs, respiratory support, and labs.", "Examine your assigned babies.", "Formulate a daily plan for each patient."]}, {"time": "07:00\u201307:30", "title": "Team Huddle / Sign-out", "details": ["Receive handoff from night team.", "Clarify any urgent issues or pending studies."]}, {"time": "07:30\u201311:30", "title": "Morning Rounds", "details": ["Structured patient presentations.", "Discuss active problems and plans.", "Order entry during or immediately after rounds."]}, {"time": "11:30\u201316:30", "title": "Procedures, Notes, and Follow-up", "details": ["Write notes.", "Follow up labs and imaging.", "Participate in admissions, resuscitations, and procedures."]}, {"time": "16:30\u201317:30", "title": "Evening Wrap-up & Sign-out", "details": ["Update lists and sign-out.", "Confirm all critical studies have been addressed."]}]}]}, {"id": "admissions", "title": "Admissions", "description": "Approach to admissions, including stabilization and initial evaluation.", "children": [{"id": "admission-overview", "title": "General Admission Approach", "description": "Systematic approach to admitting an infant to the RNICU.", "content": [{"type": "text", "content": "A structured approach to admissions helps ensure no critical steps are missed."}, {"type": "list", "style": "decimal", "title": "Initial Steps on Admission", "items": ["Confirm patient identity and gestational age.", "Assess ABCs: Airway, Breathing, Circulation.", "Check vital signs and current respiratory support.", "Place monitors (cardiac, pulse oximeter, temperature).", "Establish IV access if not already in place.", "Obtain a brief but focused history (maternal, pregnancy, delivery).", "Perform a targeted physical exam."]}, {"type": "list", "style": "disc", "title": "Key Admission Orders", "items": ["Admission diagnosis and problem list.", "Respiratory support parameters.", "Fluids, electrolytes, and nutrition orders.", "Antibiotics, if indicated.", "Laboratory studies and imaging.", "Consults if needed (e.g., cardiology, surgery)."]}]}, {"id": "respiratory-admissions", "title": "Respiratory Admissions", "description": "Admission approach for infants with respiratory distress.", "content": [{"type": "text", "content": "Infants with respiratory distress should be assessed and stabilized rapidly with attention to oxygenation, ventilation, and perfusion."}, {"type": "list", "style": "decimal", "title": "Initial Stabilization", "items": ["Assess work of breathing and oxygen saturation.", "Ensure appropriate respiratory support (CPAP, HFNC, mechanical ventilation).", "Check perfusion, heart rate, and blood pressure.", "Obtain blood gas if indicated.", "Consider differential diagnosis: TTN, RDS, PPHN, pneumonia, pneumothorax, congenital heart disease."]}, {"type": "list", "style": "disc", "title": "Key Admission Labs & Imaging", "items": ["Blood gas, CBC, blood culture (if sepsis is a concern).", "Chest X-ray.", "Consider echocardiogram if concern for structural heart disease or PPHN."]}]}]}, {"id": "transfers", "title": "Transfers", "description": "Guidance on internal and external transfers to and from the RNICU.", "children": [{"id": "incoming-transfers", "title": "Incoming Transfers", "description": "Managing infants transferred into the RNICU from other facilities.", "content": [{"type": "text", "content": "Infants may be transferred in from outside hospitals or other units within the institution. Your role is to receive, reassess, and integrate them into the RNICU care system."}, {"type": "list", "style": "disc", "title": "Key Steps on Arrival", "items": ["Repeat ABC assessment.", "Check transport records and vital sign trends.", "Clarify pending studies and treatments.", "Ensure appropriate respiratory and hemodynamic support."]}]}, {"id": "outgoing-transfers", "title": "Outgoing Transfers", "description": "Planning and executing safe transfers out of the RNICU.", "content": [{"type": "text", "content": "Transfers out of the RNICU (e.g., to step-down units or other hospitals) require careful planning and communication."}, {"type": "list", "style": "decimal", "title": "Before Transfer", "items": ["Confirm medical stability for transfer.", "Communicate with receiving team.", "Update parents on the transfer plan.", "Ensure documentation and orders are complete."]}]}]}, {"id": "discharges", "title": "Discharges", "description": "Planning and completing safe discharges home.", "children": [{"id": "discharge-planning", "title": "Discharge Planning", "description": "Preparing infants and families for discharge home.", "content": [{"type": "text", "content": "Discharging a neonate home is a major milestone. Planning should begin early, especially for infants with complex needs."}, {"type": "list", "style": "disc", "title": "Core Discharge Readiness", "items": ["Stable respiratory status in room air or on chronic home support.", "Adequate oral intake or established feeding plan (e.g., NG, G-tube).", "Parents trained in all necessary care and equipment.", "Follow-up appointments arranged.", "Medication prescriptions prepared and reconciled."]}]}]}, {"id": "procedures", "title": "Procedures", "description": "Common RNICU procedures and resident roles.", "children": [{"id": "common-procedures", "title": "Common Procedures", "description": "Overview of procedures residents may perform or assist with.", "content": [{"type": "text", "content": "Procedural exposure is an important part of the RNICU rotation. Your involvement will depend on your level of training and competence, as well as patient acuity."}, {"type": "list", "style": "disc", "title": "Typical Procedures", "items": ["Umbilical line placement (UAC/UVC).", "Peripheral IV placement.", "Lumbar punctures.", "Endotracheal intubation.", "Arterial line placement (less common for residents)."]}, {"type": "text", "content": "Always verify supervision requirements, obtain consent when appropriate, and follow sterile technique."}]}]}, {"id": "medications", "title": "Medications", "description": "High-yield medication guidance for the RNICU.", "children": [{"id": "antibiotics", "title": "Antibiotics", "description": "Common antibiotic regimens in the RNICU.", "content": [{"type": "text", "content": "Dosing in neonates is weight-, age-, and gestation-dependent. Always verify doses with current institutional references."}, {"type": "list", "style": "disc", "title": "Common Regimens", "items": ["Ampicillin + Gentamicin for early onset sepsis coverage.", "Add Vancomycin if concern for line infection or MRSA.", "Broaden coverage as per attending guidance and culture data."]}]}, {"id": "sedation-analgesia", "title": "Sedation & Analgesia", "description": "Pain control and sedation basics in the RNICU.", "content": [{"type": "text", "content": "Balancing adequate pain control with safety is crucial."}, {"type": "list", "style": "disc", "title": "General Principles", "items": ["Use non-pharmacologic comfort measures whenever possible.", "For procedural pain, consider sucrose, topical anesthetics, and appropriate systemic medications.", "Monitor for respiratory depression and hypotension with opioids and sedatives."]}]}]}, {"id": "neonatal-resuscitation", "title": "Neonatal Resuscitation", "description": "Core principles of neonatal resuscitation in the delivery room and RNICU.", "children": [{"id": "nrp-overview", "title": "NRP Core Steps", "description": "Summary of Neonatal Resuscitation Program (NRP) priorities.", "content": [{"type": "text", "content": "The Neonatal Resuscitation Program (NRP) provides a standardized algorithm for responding to compromised neonates at birth."}, {"type": "list", "style": "decimal", "title": "Initial Steps", "items": ["Warm, dry, stimulate.", "Position airway and clear if necessary.", "Assess breathing and heart rate."]}, {"type": "list", "style": "disc", "title": "Positive Pressure Ventilation (PPV)", "items": ["Begin PPV if heart rate <100 bpm and baby is apneic or gasping.", "Use appropriate mask size and ensure a good seal.", "Monitor chest rise and adjust pressures as needed."]}, {"type": "list", "style": "disc", "title": "Chest Compressions", "items": ["Start compressions if heart rate remains <60 bpm after 30 seconds of effective PPV.", "Coordinate compressions with ventilations in a 3:1 ratio.", "Reassess heart rate every 60 seconds."]}]}]}]};
+  function useWhitebookData() {
+    const raw = document.getElementById("whitebook-data").textContent;
+    return JSON.parse(raw);
+  }
 
-        // Helper: find section by id recursively
-        function findSectionById(id) {
-            for (const section of WHITEBOOK_DATA.sections) {
-                if (section.id === id) return section;
-                if (section.children) {
-                    for (const child of section.children) {
-                        if (child.id === id) return child;
-                    }
-                }
-            }
-            return null;
+  function App() {
+    const data = useWhitebookData();
+    const [search, setSearch] = useState("");
+    const [activeSection, setActiveSection] = useState(null);
+    const [activeType, setActiveType] = useState(null); // "quick" or "system"
+
+    const searchResults = useMemo(() => {
+      const q = search.trim().toLowerCase();
+      if (!q) return [];
+      const results = [];
+
+      data.quickAccess.forEach(tile => {
+        const haystack = [
+          tile.title,
+          tile.description || "",
+          ...(tile.sections || [])
+        ].join(" ").toLowerCase();
+        if (haystack.includes(q)) {
+          results.push({
+            type: "quick",
+            id: tile.id,
+            title: tile.title,
+            parent: "Quick Access"
+          });
         }
+      });
 
-        function App() {
-            const [isAuthenticated, setIsAuthenticated] = useState(false);
-            const [password, setPassword] = useState('');
-            const [passwordError, setPasswordError] = useState('');
+      data.systems.forEach(sys => {
+        const titleMatch = sys.title.toLowerCase().includes(q);
+        const topicsMatch = (sys.topics || []).some(t => t.toLowerCase().includes(q));
+        if (titleMatch || topicsMatch) {
+          results.push({
+            type: "system",
+            id: sys.id,
+            title: sys.title,
+            parent: "System"
+          });
+        }
+      });
 
-            const [view, setView] = useState('home'); // 'home' | 'browse' | 'search' | 'content' | 'ai'
-            const [selectedSection, setSelectedSection] = useState(null);
-            const [searchQuery, setSearchQuery] = useState('');
-            const [searchResults, setSearchResults] = useState([]);
+      return results.slice(0, 8);
+    }, [search, data]);
 
-            const [aiMessages, setAiMessages] = useState([
-                {
-                    id: 1,
-                    from: 'ai',
-                    text: "Hi! I'm your RNICU assistant. Ask me protocol questions, dosing ranges, or 'what should I do next?' and I'll walk you through it.",
-                    timestamp: new Date().toLocaleTimeString()
-                }
-            ]);
-            const [aiInput, setAiInput] = useState('');
-            const aiMessagesEndRef = useRef(null);
-            const [isThinking, setIsThinking] = useState(false);
+    const handleOpenQuick = (tile) => {
+      if (tile.link) {
+        // Treat Learning Modules as an external link
+        window.location.href = tile.link;
+        return;
+      }
+      setActiveType("quick");
+      setActiveSection(tile);
+    };
 
-            useEffect(() => {
-                if (aiMessagesEndRef.current) {
-                    aiMessagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, [aiMessages, isThinking]);
+    const handleOpenSystem = (sys) => {
+      setActiveType("system");
+      setActiveSection(sys);
+    };
 
-            const handleLogin = (e) => {
-                e.preventDefault();
-                if (password === CORRECT_PASSWORD) {
-                    setIsAuthenticated(true);
-                    setPasswordError('');
-                } else {
-                    setPasswordError('Incorrect password. Please try again.');
-                }
-            };
-
-            const navigateToSection = (id) => {
-                const section = findSectionById(id);
-                if (section) {
-                    setSelectedSection(section);
-                    setView('content');
-                }
-            };
-
-            const handleSearch = (query) => {
-                const value = query.toLowerCase();
-                setSearchQuery(query);
-
-                if (!value.trim()) {
-                    setSearchResults([]);
-                    setView('home');
-                    return;
-                }
-
-                const results = [];
-
-                WHITEBOOK_DATA.sections.forEach(section => {
-                    if (section.title.toLowerCase().includes(value) || section.description?.toLowerCase().includes(value)) {
-                        results.push({
-                            type: 'section',
-                            title: section.title,
-                            description: section.description,
-                            id: section.id
-                        });
-                    }
-
-                    if (section.children) {
-                        section.children.forEach(child => {
-                            if (
-                                child.title.toLowerCase().includes(value) ||
-                                child.description?.toLowerCase().includes(value)
-                            ) {
-                                results.push({
-                                    type: 'topic',
-                                    title: child.title,
-                                    description: child.description,
-                                    id: child.id,
-                                    parent: section.title
-                                });
-                            }
-
-                            if (child.content) {
-                                child.content.forEach(block => {
-                                    if (block.type === 'text' && block.content.toLowerCase().includes(value)) {
-                                        results.push({
-                                            type: 'content',
-                                            title: child.title,
-                                            description: `Content match in ${child.title}`,
-                                            id: child.id,
-                                            parent: section.title
-                                        });
-                                    } else if (block.type === 'list') {
-                                        block.items.forEach(item => {
-                                            if (item.toLowerCase().includes(value)) {
-                                                results.push({
-                                                    type: 'content',
-                                                    title: child.title,
-                                                    description: `${block.title} item match`,
-                                                    id: child.id,
-                                                    parent: section.title
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-
-                const uniqueResults = results.filter((result, index, self) =>
-                    index === self.findIndex((r) => r.id === result.id && r.type === result.type)
-                );
-
-                setSearchResults(uniqueResults);
-                setView('search');
-            };
-
-            const handleAiSubmit = async (e) => {
-                e.preventDefault();
-                const trimmed = aiInput.trim();
-                if (!trimmed) return;
-
-                const newMessage = {
-                    id: Date.now(),
-                    from: 'user',
-                    text: trimmed,
-                    timestamp: new Date().toLocaleTimeString()
-                };
-
-                setAiMessages(prev => [...prev, newMessage]);
-                setAiInput('');
-                setIsThinking(true);
-
-                setTimeout(() => {
-                    const aiReply = {
-                        id: Date.now() + 1,
-                        from: 'ai',
-                        text: generateAiResponse(trimmed),
-                        timestamp: new Date().toLocaleTimeString()
-                    };
-                    setAiMessages(prev => [...prev, aiReply]);
-                    setIsThinking(false);
-                }, 600);
-            };
-
-            const generateAiResponse = (query) => {
-                const q = query.toLowerCase();
-
-                if (q.includes('sepsis')) {
-                    return "For suspected neonatal sepsis:\n\n• Stabilize ABCs first.\n• Obtain blood cultures, CBC, and consider CRP.\n• Start empiric antibiotics per local protocol (often ampicillin + gentamicin).\n• Adjust based on gestational age, risk factors, and culture results.\n\nAlways discuss with the attending before initiating or changing antibiotics.";
-                }
-
-                if (q.includes('feeding') || q.includes('trophic') || q.includes('tf') || q.includes('nutrition')) {
-                    return "For feeding plans in the RNICU:\n\n• Start with birth weight, gestational age, and clinical stability.\n• Very preterm infants often start with trophic feeds (e.g., 10–20 mL/kg/day) while on parenteral nutrition.\n• Advance by 20–30 mL/kg/day as tolerated per unit protocol.\n• Watch for abdominal distension, emesis, bloody stools, or apnea/brady spells.\n\nFollow your local feeding guidelines and always verify orders with the attending.";
-                }
-
-                if (q.includes('oxygen') || q.includes('saturation') || q.includes('pphn')) {
-                    return "For oxygen saturation targets:\n\n• Most preterm infants: follow unit-specific SpO₂ targets (often mid- to high-80s to low-90s, depending on gestational age and comorbidities).\n• Term infants with PPHN: usually target higher saturations (low- to mid-90s), but avoid hyperoxia.\n• Avoid large, rapid swings in FiO₂.\n\nCheck your local protocol and discuss target ranges on rounds.";
-                }
-
-                if (q.includes('ppv') || q.includes('positive pressure') || q.includes('neonatal resuscitation')) {
-                    return "In neonatal resuscitation (NRP):\n\n• Begin PPV if HR < 100 bpm and baby is apneic or gasping.\n• Use appropriate mask size and ensure a good seal.\n• Aim for visible chest rise.\n• Reassess HR every 30 seconds.\n\nIf HR remains < 60 bpm after 30 seconds of effective PPV, start chest compressions in a 3:1 ratio with ventilations.";
-                }
-
-                return "I don't have a protocol-specific answer stored for that exact question, but here's a safe approach:\n\n1) Stabilize airway, breathing, and circulation.\n2) Check vital signs, glucose, and temperature.\n3) Review gestational age, birth history, and current support.\n4) Consult RNICU protocols or the resident guide sections on the home page for topic-specific guidance.\n\nYou can also try searching by key words in the guide above.";
-            };
-
-            if (!isAuthenticated) {
-                return (
-                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-                            <div className="text-center mb-6">
-                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full gradient-bg text-white shadow-lg mb-4">
-                                    <i className="fas fa-baby text-3xl"></i>
-                                </div>
-                                <h1 className="text-2xl font-bold text-gray-800 mb-1">RNICU Resident Guide</h1>
-                                <p className="text-gray-500 text-sm">Interactive clinical protocols & quick-reference guidance</p>
-                            </div>
-                            <form onSubmit={handleLogin} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Access Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                        placeholder="Enter password"
-                                        autoFocus
-                                    />
-                                    {passwordError && (
-                                        <p className="text-sm text-red-500 mt-1">{passwordError}</p>
-                                    )}
-                                </div>
-                                <button
-                                    type="submit"
-                                    className="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                    <i className="fas fa-unlock-alt mr-2"></i>
-                                    Access Guide
-                                </button>
-                            </form>
-                            <p className="mt-4 text-xs text-center text-gray-400">
-                                For authorized RNICU staff and trainees only.
-                            </p>
-                        </div>
-                    </div>
-                );
-            }
-
-            return (
-                <div className="min-h-screen bg-gray-50">
-                    {/* Header */}
-                    <header className="sticky-header border-b border-gray-200">
-                        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white shadow">
-                                    <i className="fas fa-baby text-xl"></i>
-                                </div>
-                                <div>
-                                    <h1 className="text-sm font-semibold text-gray-800">
-                                        RNICU Resident White Book
-                                    </h1>
-                                    <p className="text-xs text-gray-500">
-                                        Quick protocols, workflows & reference for pediatric residents
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <button
-                                    onClick={() => setView('ai')}
-                                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
-                                        view === 'ai'
-                                            ? 'bg-indigo-600 text-white shadow'
-                                            : 'bg-white text-indigo-600 border border-indigo-200'
-                                    }`}
-                                >
-                                    <i className="fas fa-comments mr-1.5"></i>
-                                    AI Assistant
-                                </button>
-                                <span className="hidden sm:inline-flex items-center px-2 py-1 text-[0.65rem] font-medium bg-green-50 text-green-700 rounded-full border border-green-100">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                                    Internal Use Only
-                                </span>
-                            </div>
-                        </div>
-                        <div className="max-w-7xl mx-auto px-4 pb-3">
-                            <div className="relative">
-                                <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => handleSearch(e.target.value)}
-                                    className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-                                    placeholder="Search topics, e.g. 'sepsis', 'PPHN', 'feeds'..."
-                                />
-                            </div>
-                        </div>
-                    </header>
-
-                    {/* Main Layout */}
-                    <main className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
-                        {/* Sidebar */}
-                        <aside className="lg:col-span-1 mb-4 lg:mb-0">
-                            <div className="bg-white rounded-lg content-card p-4">
-                                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                                    Sections
-                                </h2>
-                                <nav className="space-y-1 text-sm">
-                                    {WHITEBOOK_DATA.sections.map(section => (
-                                        <button
-                                            key={section.id}
-                                            onClick={() => {
-                                                setSelectedSection(section);
-                                                setView('content');
-                                            }}
-                                            className={`w-full flex flex-col text-left px-3 py-2 rounded-md hover:bg-indigo-50 ${
-                                                selectedSection?.id === section.id ? 'bg-indigo-50 border border-indigo-100' : ''
-                                            }`}
-                                        >
-                                            <span className="font-medium text-gray-800">{section.title}</span>
-                                            <span className="text-xs text-gray-500">
-                                                {section.description}
-                                            </span>
-                                        </button>
-                                    ))}
-                                </nav>
-                            </div>
-                        </aside>
-
-                        {/* Main content area */}
-                        <section className="lg:col-span-3 space-y-4">
-                            {/* View Tabs */}
-                            <div className="flex items-center justify-between">
-                                <div className="inline-flex items-center bg-gray-100 rounded-full p-1 text-xs">
-                                    <button
-                                        onClick={() => setView('home')}
-                                        className={`px-3 py-1 rounded-full ${
-                                            view === 'home' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
-                                        }`}
-                                    >
-                                        Overview
-                                    </button>
-                                    <button
-                                        onClick={() => setView('browse')}
-                                        className={`px-3 py-1 rounded-full ${
-                                            view === 'browse' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
-                                        }`}
-                                    >
-                                        Browse
-                                    </button>
-                                    <button
-                                        onClick={() => searchResults.length && setView('search')}
-                                        className={`px-3 py-1 rounded-full ${
-                                            view === 'search' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
-                                        }`}
-                                    >
-                                        Search Results
-                                    </button>
-                                    <button
-                                        onClick={() => selectedSection && setView('content')}
-                                        className={`px-3 py-1 rounded-full ${
-                                            view === 'content' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
-                                        }`}
-                                    >
-                                        Current Topic
-                                    </button>
-                                </div>
-                                <p className="hidden sm:block text-[0.65rem] text-gray-500">
-                                    This guide supplements, but does not replace, attending and fellow supervision.
-                                </p>
-                            </div>
-
-                            {/* Conditional Views */}
-                            {view === 'ai' ? (
-                                <AiAssistantView
-                                    messages={aiMessages}
-                                    input={aiInput}
-                                    setInput={setAiInput}
-                                    onSubmit={handleAiSubmit}
-                                    isThinking={isThinking}
-                                    messagesEndRef={aiMessagesEndRef}
-                                />
-                            ) : view === 'home' ? (
-                                <HomeView onNavigate={() => setView('browse')} onSectionClick={navigateToSection} />
-                            ) : view === 'browse' ? (
-                                <BrowseView onSectionClick={navigateToSection} />
-                            ) : view === 'search' ? (
-                                <SearchResults results={searchResults} onResultClick={navigateToSection} />
-                            ) : view === 'content' && selectedSection ? (
-                                <ContentView section={selectedSection} onNavigate={navigateToSection} />
-                            ) : null}
-                        </section>
-                    </main>
+    return (
+      <div className="min-h-screen text-slate-900">
+        {/* Top bar */}
+        <header className="sticky-header border-b border-slate-200">
+          <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white">
+                <i className="fa-solid fa-baby"></i>
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-slate-900 leading-tight">
+                  RNICU Guide
                 </div>
-            );
-        }
+                <div className="text-xs text-slate-500">
+                  Clinical Protocols
+                </div>
+              </div>
+            </div>
+            <button
+              className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-amber-600"
+              onClick={() => {
+                const quickRef = data.quickAccess.find(q => q.id === "quick-reference");
+                if (quickRef) {
+                  setActiveType("quick");
+                  setActiveSection(quickRef);
+                }
+              }}
+            >
+              <i className="fa-solid fa-bolt text-xs"></i>
+              Quick Ref
+            </button>
+          </div>
+        </header>
 
-        function HomeView({ onNavigate, onSectionClick }) {
-            const quickAccess = [
-                { title: 'Admissions', icon: 'fa-plus-circle', id: 'admissions', color: 'bg-blue-500' },
-                { title: 'Transfers', icon: 'fa-exchange-alt', id: 'transfers', color: 'bg-green-500' },
-                { title: 'Discharges', icon: 'fa-sign-out-alt', id: 'discharges', color: 'bg-purple-500' },
-                { title: 'Procedures', icon: 'fa-procedures', id: 'procedures', color: 'bg-red-500' },
-                { title: 'Medications', icon: 'fa-pills', id: 'medications', color: 'bg-yellow-500' },
-                { title: 'Resuscitation', icon: 'fa-heartbeat', id: 'neonatal-resuscitation', color: 'bg-pink-500' },
-                { title: 'NICU Learning Modules', icon: 'fa-graduation-cap', id: 'nicu-learning-modules', color: 'bg-teal-500' },
-            ];
+        <main className="mx-auto max-w-6xl px-4 pb-10 pt-6 grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1.1fr)]">
+          {/* Left column: hero + cards */}
+          <div className="space-y-6">
+            {/* Welcome card + search */}
+            <section className="card-shadow rounded-2xl bg-white px-5 py-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h1 className="text-lg font-semibold text-slate-900">
+                    Welcome to the RNICU Guide
+                  </h1>
+                  <p className="mt-1 text-sm text-slate-600 max-w-xl">
+                    Your interactive clinical protocol resource. Use the search,
+                    Quick Access, or system-based browsing to find what you need fast.
+                  </p>
+                </div>
+              </div>
 
-            return (
-                <div className="space-y-6">
-                    <div className="bg-white rounded-lg content-card p-6">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome to the RNICU Guide</h2>
-                        <p className="text-gray-600 text-sm">
-                            Your interactive clinical protocol resource for the Regional NICU. Use the quick links
-                            below to jump into high-yield areas, browse by system, or search for specific topics.
-                            This tool is designed to support, not replace, bedside teaching and supervision.
+              {/* Search */}
+              <div className="mt-4 relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <i className="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
+                </div>
+                <input
+                  type="search"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2 text-sm focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Search protocols, medications, procedures..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+                {searchResults.length > 0 && (
+                  <div className="absolute z-20 mt-1 w-full rounded-xl border border-slate-200 bg-white text-sm shadow-lg">
+                    {searchResults.map((r) => (
+                      <button
+                        key={r.type + "-" + r.id}
+                        className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-slate-50"
+                        onClick={() => {
+                          if (r.type === "quick") {
+                            const tile = data.quickAccess.find(q => q.id === r.id);
+                            if (tile) handleOpenQuick(tile);
+                          } else {
+                            const sys = data.systems.find(s => s.id === r.id);
+                            if (sys) handleOpenSystem(sys);
+                          }
+                          setSearch("");
+                        }}
+                      >
+                        <span>{r.title}</span>
+                        <span className="text-xs text-slate-400">{r.parent}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Quick Access */}
+            <section className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-slate-800">
+                  Quick Access
+                </h2>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {data.quickAccess.map(tile => (
+                  <button
+                    key={tile.id}
+                    onClick={() => handleOpenQuick(tile)}
+                    className={`tile-hover flex items-center gap-3 rounded-2xl border border-slate-100 ${tile.bg} p-3 text-left`}
+                  >
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-xl text-white ${tile.iconBg}`}>
+                      <i className={`fa-solid ${tile.icon} text-sm`}></i>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-slate-900">
+                          {tile.title}
                         </p>
-                    </div>
-
-                    {/* Quick Access */}
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Quick Access</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {quickAccess.map(item => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => {
-                                        if (item.id === 'nicu-learning-modules') {
-                                            window.open('nicu-learning-modules.html', '_blank');
-                                        } else {
-                                            onSectionClick(item.id);
-                                        }
-                                    }}
-                                    className="section-card bg-white rounded-lg content-card p-4 text-left hover:shadow-lg transition"
-                                >
-                                    <div className={`${item.color} w-12 h-12 rounded-full flex items-center justify-center mb-3`}>
-                                        <i className={`fas ${item.icon} text-white text-xl`}></i>
-                                    </div>
-                                    <h4 className="font-semibold text-gray-800 text-sm">{item.title}</h4>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Browse Categories */}
-                    <div>
-                        <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-lg font-semibold text-gray-800">Browse by System</h3>
-                            <button
-                                onClick={onNavigate}
-                                className="text-indigo-600 font-semibold text-sm hover:underline"
-                            >
-                                View All →
-                            </button>
-                        </div>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            {WHITEBOOK_DATA.sections.map(section => (
-                                <button
-                                    key={section.id}
-                                    onClick={() => onSectionClick(section.id)}
-                                    className="section-card bg-white rounded-lg content-card p-4 text-left hover:shadow-md transition"
-                                >
-                                    <h4 className="font-semibold text-gray-800 mb-1 text-sm">{section.title}</h4>
-                                    <p className="text-xs text-gray-600">
-                                        {section.description}
-                                    </p>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        function BrowseView({ onSectionClick }) {
-            return (
-                <div className="space-y-4">
-                    <div className="bg-white rounded-lg content-card p-4">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-1">Browse All Sections</h2>
-                        <p className="text-sm text-gray-600">
-                            Click a section to see its topics and detailed workflow/content.
-                        </p>
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        {WHITEBOOK_DATA.sections.map(section => (
-                            <div key={section.id} className="bg-white rounded-lg content-card p-4">
-                                <div className="flex items-start justify-between mb-2">
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-800">{section.title}</h3>
-                                        <p className="text-sm text-gray-600">{section.description}</p>
-                                    </div>
-                                    <span className="text-xs text-gray-500">
-                                        {section.children?.length || 0} topics
-                                    </span>
-                                </div>
-                                <div className="mt-3 space-y-1">
-                                    {section.children?.map(child => (
-                                        <button
-                                            key={child.id}
-                                            onClick={() => onSectionClick(child.id)}
-                                            className="w-full flex items-center justify-between text-left px-3 py-1.5 rounded-md hover:bg-indigo-50 text-sm"
-                                        >
-                                            <span className="text-gray-800">{child.title}</span>
-                                            <i className="fas fa-chevron-right text-xs text-gray-400"></i>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        function SearchResults({ results, onResultClick }) {
-            if (!results.length) {
-                return (
-                    <div className="bg-white rounded-lg content-card p-6">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-2">No Results</h2>
-                        <p className="text-sm text-gray-600">
-                            Try different keywords, or browse by system using the tabs above.
-                        </p>
-                    </div>
-                );
-            }
-
-            return (
-                <div className="space-y-3">
-                    <div className="bg-white rounded-lg content-card p-4">
-                        <h2 className="text-lg font-semibold text-gray-800 mb-1">Search Results</h2>
-                        <p className="text-sm text-gray-600">
-                            {results.length} result{results.length !== 1 ? 's' : ''} found.
-                        </p>
-                    </div>
-                    <div className="space-y-2">
-                        {results.map(result => (
-                            <button
-                                key={`${result.type}-${result.id}`}
-                                onClick={() => onResultClick(result.id)}
-                                className="w-full flex items-start justify-between bg-white rounded-lg content-card px-4 py-3 hover:shadow-md transition text-left"
-                            >
-                                <div>
-                                    <div className="flex items-center space-x-2 mb-1">
-                                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-indigo-50 text-indigo-700">
-                                            {result.type === 'section'
-                                                ? 'Section'
-                                                : result.type === 'topic'
-                                                ? 'Topic'
-                                                : 'Content'}
-                                        </span>
-                                        {result.parent && (
-                                            <span className="text-xs text-gray-400">
-                                                in {result.parent}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <h3 className="text-sm font-semibold text-gray-800">{result.title}</h3>
-                                    {result.description && (
-                                        <p className="text-xs text-gray-600 mt-0.5">
-                                            {result.description}
-                                        </p>
-                                    )}
-                                </div>
-                                <i className="fas fa-chevron-right text-gray-300 mt-1"></i>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        function ContentView({ section, onNavigate }) {
-            const isParent = !!section.children;
-            const parentSection = WHITEBOOK_DATA.sections.find(s =>
-                s.children?.some(child => child.id === section.id)
-            );
-
-            return (
-                <div className="space-y-4">
-                    <div className="bg-white rounded-lg content-card p-5">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <div className="flex items-center space-x-2 mb-1">
-                                    {parentSection && (
-                                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-indigo-50 text-indigo-700">
-                                            {parentSection.title}
-                                        </span>
-                                    )}
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-gray-100 text-gray-700">
-                                        {isParent ? 'Section Overview' : 'Topic'}
-                                    </span>
-                                </div>
-                                <h2 className="text-xl font-semibold text-gray-800">{section.title}</h2>
-                                {section.description && (
-                                    <p className="text-sm text-gray-600 mt-1">
-                                        {section.description}
-                                    </p>
-                                )}
-                            </div>
-                            {parentSection && (
-                                <button
-                                    onClick={() => onNavigate(parentSection.id)}
-                                    className="text-xs text-indigo-600 hover:underline"
-                                >
-                                    ← Back to {parentSection.title}
-                                </button>
-                            )}
-                        </div>
-                    </div>
-
-                    {isParent ? (
-                        <div className="grid md:grid-cols-2 gap-4">
-                            {section.children?.map(child => (
-                                <button
-                                    key={child.id}
-                                    onClick={() => onNavigate(child.id)}
-                                    className="bg-white rounded-lg content-card p-4 text-left hover:shadow-md transition"
-                                >
-                                    <h3 className="text-sm font-semibold text-gray-800 mb-1">
-                                        {child.title}
-                                    </h3>
-                                    <p className="text-xs text-gray-600">
-                                        {child.description}
-                                    </p>
-                                    <div className="mt-2 flex items-center text-[0.65rem] text-gray-500">
-                                        <i className="fas fa-arrow-right mr-1"></i>
-                                        View details
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="bg-white rounded-lg content-card p-5 space-y-4 text-sm text-gray-800 leading-relaxed">
-                            {section.content?.map((block, index) => {
-                                if (block.type === 'text') {
-                                    return (
-                                        <p key={index}>
-                                            {block.content}
-                                        </p>
-                                    );
-                                }
-
-                                if (block.type === 'list') {
-                                    return (
-                                        <div key={index} className="space-y-1">
-                                            {block.title && (
-                                                <h3 className="text-sm font-semibold text-gray-800 mb-1">
-                                                    {block.title}
-                                                </h3>
-                                            )}
-                                            <ul className={`pl-5 ${
-                                                block.style === 'decimal' ? 'list-decimal' : 'list-disc'
-                                            }`}>
-                                                {block.items.map((item, i) => (
-                                                    <li key={i} className="mb-0.5">
-                                                        {item}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    );
-                                }
-
-                                if (block.type === 'timeline') {
-                                    return (
-                                        <div key={index}>
-                                            {block.title && (
-                                                <h3 className="text-sm font-semibold text-gray-800 mb-3">
-                                                    {block.title}
-                                                </h3>
-                                            )}
-                                            <div className="relative pl-5">
-                                                <div className="absolute left-1 top-0 bottom-0 w-0.5 bg-indigo-200"></div>
-                                                <div className="space-y-4">
-                                                    {block.items.map((item, i) => (
-                                                        <div key={i} className="relative pl-3">
-                                                            <div className="absolute left-[-6px] top-1 w-3 h-3 rounded-full bg-indigo-500 border-2 border-white shadow"></div>
-                                                            <div className="bg-indigo-50 rounded-lg p-3">
-                                                                <div className="flex items-center justify-between mb-1">
-                                                                    <span className="text-xs font-semibold text-indigo-700">
-                                                                        {item.time}
-                                                                    </span>
-                                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-white text-indigo-700 border border-indigo-100">
-                                                                        Step {i + 1}
-                                                                    </span>
-                                                                </div>
-                                                                <div className="text-sm font-medium text-gray-800">
-                                                                    {item.title}
-                                                                </div>
-                                                                <ul className="mt-1 pl-4 list-disc text-xs text-gray-700">
-                                                                    {item.details.map((detail, j) => (
-                                                                        <li key={j} className="mb-0.5">
-                                                                            {detail}
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                }
-
-                                return null;
-                            })}
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        function AiAssistantView({ messages, input, setInput, onSubmit, isThinking, messagesEndRef }) {
-            return (
-                <div className="bg-white rounded-lg content-card h-[480px] flex flex-col">
-                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 rounded-full ai-bubble flex items-center justify-center text-white">
-                                <i className="fas fa-robot text-sm"></i>
-                            </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800">
-                                    RNICU AI Assistant
-                                </h2>
-                                <p className="text-xs text-gray-500">
-                                    Ask "What should I do next?", dosing ranges, or pathway questions.
-                                </p>
-                            </div>
-                        </div>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-red-50 text-red-700 border border-red-100">
-                            Beta \u2013 always confirm with attending
-                        </span>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-sm">
-                        {messages.map(message => (
-                            <div
-                                key={message.id}
-                                className={`flex ${message.from === 'user' ? 'justify-end' : 'justify-start'}`}
-                            >
-                                {message.from === 'ai' && (
-                                    <div className="w-7 h-7 rounded-full ai-bubble flex items-center justify-center text-white mr-2 flex-shrink-0">
-                                        <i className="fas fa-robot text-xs"></i>
-                                    </div>
-                                )}
-                                <div
-                                    className={`rounded-2xl px-3 py-2 max-w-[75%] ${
-                                        message.from === 'user'
-                                            ? 'bg-indigo-600 text-white'
-                                            : 'ai-message text-gray-800'
-                                    }`}
-                                >
-                                    <div className="whitespace-pre-line">
-                                        {message.text}
-                                    </div>
-                                    <div className={`mt-1 text-[0.65rem] ${
-                                        message.from === 'user'
-                                            ? 'text-indigo-200 text-right'
-                                            : 'text-gray-500'
-                                    }`}>
-                                        {message.timestamp}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-
-                        {isThinking && (
-                            <div className="flex items-center space-x-2 text-xs text-gray-500">
-                                <div className="w-7 h-7 rounded-full ai-bubble flex items-center justify-center text-white mr-1">
-                                    <i className="fas fa-robot text-xs"></i>
-                                </div>
-                                <div className="flex space-x-1">
-                                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
-                                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-75"></span>
-                                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-150"></span>
-                                </div>
-                                <span>Thinking...</span>
-                            </div>
+                        {tile.badge && (
+                          <span className="rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                            {tile.badge}
+                          </span>
                         )}
-
-                        <div ref={messagesEndRef} />
+                      </div>
+                      {tile.description && (
+                        <p className="mt-0.5 line-clamp-2 text-xs text-slate-600">
+                          {tile.description}
+                        </p>
+                      )}
                     </div>
+                    <i className="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+                  </button>
+                ))}
+              </div>
+            </section>
 
-                    <form onSubmit={onSubmit} className="border-t border-gray-100 px-4 py-3 bg-gray-50">
-                        <div className="flex items-center space-x-2">
-                            <input
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                className="flex-1 border border-gray-300 rounded-full px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                                placeholder="Example: 'What should I do for a 28-weeker with suspected sepsis?'"
-                            />
-                            <button
-                                type="submit"
-                                className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
-                            >
-                                <i className="fas fa-paper-plane text-xs"></i>
-                            </button>
-                        </div>
-                    </form>
+            {/* Browse by System */}
+            <section className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-slate-800">
+                  Browse by System
+                </h2>
+                <span className="text-xs text-indigo-600 font-medium">
+                  View All →
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {data.systems.map(system => (
+                  <button
+                    key={system.id}
+                    onClick={() => handleOpenSystem(system)}
+                    className="tile-hover flex w-full items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-3 text-left"
+                  >
+                    <div>
+                      <p className="text-xs font-semibold text-slate-900">
+                        {system.title}
+                      </p>
+                      <p className="mt-0.5 text-[11px] text-slate-500">
+                        {(system.topics || []).length} topics
+                      </p>
+                    </div>
+                    <i className="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+                  </button>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* Right column: detail panel */}
+          <aside className="space-y-3">
+            <section className="card-shadow rounded-2xl bg-white px-5 py-4 h-full">
+              {!activeSection && (
+                <div className="flex h-full flex-col items-center justify-center text-center text-sm text-slate-500">
+                  <i className="fa-regular fa-note-sticky mb-2 text-xl text-slate-300"></i>
+                  <p className="font-medium text-slate-700">No section selected</p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    Choose a tile on the left to see key topics and checklists here.
+                  </p>
                 </div>
-            );
-        }
+              )}
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
+              {activeSection && (
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600">
+                        {activeType === "quick" ? "Quick Access" : "System"}
+                      </p>
+                      <h2 className="mt-0.5 text-sm font-semibold text-slate-900">
+                        {activeSection.title}
+                      </h2>
+                    </div>
+                    <button
+                      className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] text-slate-600 hover:bg-slate-100"
+                      onClick={() => {
+                        setActiveSection(null);
+                        setActiveType(null);
+                      }}
+                    >
+                      Clear
+                    </button>
+                  </div>
+
+                  {activeType === "quick" && (
+                    <div className="space-y-2">
+                      {activeSection.description && (
+                        <p className="text-xs text-slate-600">
+                          {activeSection.description}
+                        </p>
+                      )}
+                      <ul className="mt-1 space-y-1.5 text-xs text-slate-700">
+                        {(activeSection.sections || []).map((item, idx) => (
+                          <li key={idx} className="flex gap-2">
+                            <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      {activeSection.id === "learning-modules" && activeSection.link && (
+                        <a
+                          href={activeSection.link}
+                          className="mt-3 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+                        >
+                          Open Learning Modules
+                          <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                      )}
+                    </div>
+                  )}
+
+                  {activeType === "system" && (
+                    <div className="space-y-2">
+                      <p className="text-xs text-slate-600">
+                        Topics from the RNICU whitebook section.
+                      </p>
+                      <ul className="mt-1 space-y-1.5 text-xs text-slate-700">
+                        {(activeSection.topics || []).map((topic, idx) => (
+                          <li key={idx} className="flex gap-2">
+                            <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                            <span>{topic}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
+          </aside>
+        </main>
+      </div>
+    );
+  }
+
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(<App />);
+</script>
 </body>
 </html>
