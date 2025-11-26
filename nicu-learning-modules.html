@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NICU Learning Modules</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0e1a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+            border-bottom: 1px solid #334155;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .back-button {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .back-button:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+        .header-subtitle {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            padding-bottom: 2rem;
+        }
+        
+        /* Module Library */
+        .library-intro {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 41, 59, 0.5) 100%);
+            border: 1px solid #3b82f6;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .library-intro h2 {
+            font-size: 1.5rem;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        .library-intro p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+        
+        .module-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .module-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #334155;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .module-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .module-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .module-info {
+            flex: 1;
+        }
+        .module-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 0.25rem;
+        }
+        .module-subtitle {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        
+        .module-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #334155;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .meta-icon {
+            color: #3b82f6;
+        }
+        
+        /* Layer Navigation */
+        .layer-nav {
+            background: #1e293b;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #334155;
+        }
+        .layer-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .layer-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 0.75rem 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .layer-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 1.25rem;
+            right: -1px;
+            width: 100%;
+            height: 2px;
+            background: #334155;
+            z-index: 0;
+        }
+        .layer-step.completed:not(:last-child)::after {
+            background: #3b82f6;
+        }
+        .layer-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #334155;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.2s;
+        }
+        .layer-step.active .layer-number {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+        .layer-step.completed .layer-number {
+            background: #22c55e;
+            color: white;
+        }
+        .layer-step.completed .layer-number i {
+            font-size: 0.8rem;
+        }
+        .layer-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .layer-step.active .layer-label {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+        
+        /* Content Card */
+        .content-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #334155;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .layer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #334155;
+        }
+        .layer-icon-large {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .layer-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 0.25rem;
+        }
+        .layer-description {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        
+        .content-section {
+            margin-bottom: 1.5rem;
+        }
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .bullet-list {
+            list-style: none;
+            margin-left: 0;
+        }
+        .bullet-list li {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-left: 3px solid #3b82f6;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .bullet-icon {
+            color: #3b82f6;
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+        
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .info-box-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        .info-box-content {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .warning-box-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #f87171;
+            margin-bottom: 0.5rem;
+        }
+        .warning-box-content {
+            font-size: 0.95rem;
+            color: #fca5a5;
+            line-height: 1.6;
+        }
+        
+        .success-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .success-box-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+        .success-box-content {
+            font-size: 0.95rem;
+            color: #86efac;
+            line-height: 1.6;
+        }
+        
+        .case-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(30, 41, 59, 0.3) 100%);
+            border: 2px solid #6366f1;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+        .case-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: #a5b4fc;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        .case-content {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+        .case-content p {
+            margin-bottom: 0.75rem;
+        }
+        
+        .expandable-section {
+            margin: 1rem 0;
+        }
+        .expandable-header {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .expandable-header:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #3b82f6;
+        }
+        .expandable-title {
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .expandable-icon {
+            color: #3b82f6;
+            transition: transform 0.2s;
+        }
+        .expandable-icon.expanded {
+            transform: rotate(180deg);
+        }
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .expandable-content.expanded {
+            max-height: 2000px;
+        }
+        .expandable-body {
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-top: none;
+            border-radius: 0 0 0.75rem 0.75rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .dosing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .dosing-table th {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #334155;
+        }
+        .dosing-table td {
+            padding: 0.75rem;
+            border: 1px solid #334155;
+            background: rgba(30, 41, 59, 0.3);
+        }
+        
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+        .btn-secondary {
+            background: rgba(51, 65, 85, 0.5);
+            border: 2px solid #475569;
+            color: #e2e8f0;
+        }
+        .btn-secondary:hover {
+            background: rgba(71, 85, 105, 0.5);
+            border-color: #64748b;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .completion-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(30, 41, 59, 0.5) 100%);
+            border: 2px solid #22c55e;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+        .completion-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+        }
+        .completion-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+        .completion-message {
+            font-size: 1.05rem;
+            color: #86efac;
+            margin-bottom: 2rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .layer-label {
+                font-size: 0.7rem;
+            }
+            .layer-number {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const MODULES = {
+            bpd: {
+                id: 'bpd',
+                title: 'BPD Prevention Strategies',
+                subtitle: 'Evidence-based approaches for extremely preterm infants',
+                icon: '🫁',
+                duration: '15 min',
+                layers: 4,
+                content: {
+                    layer1: {
+                        title: 'Quick Facts',
+                        subtitle: 'Essential interventions you need to know',
+                        icon: '⚡',
+                        duration: '30 seconds',
+                        sections: [
+                            {
+                                title: 'Routine Interventions (Start Day 1)',
+                                items: [
+                                    'Caffeine citrate: Loading 20 mg/kg, then 5 mg/kg/day (start within 24h)',
+                                    'Fluid restriction: 80-100 mL/kg/day initially, then 130-140 mL/kg/day',
+                                    'Mother\'s breast milk (or donor milk) as preferred nutrition',
+                                    'Lung-protective ventilation: Volume-targeted, TV 4-6 mL/kg',
+                                    'Vitamin A: 5000 IU IM 3×/week × 4 weeks (if available, for ventilated ELBW)',
+                                ],
+                                type: 'checklist'
+                            },
+                            {
+                                title: 'Key Targets',
+                                items: [
+                                    'SpO₂: 90-95%',
+                                    'pCO₂: 40-65 mmHg (permissive hypercapnia)',
+                                    'Minimize days on mechanical ventilation',
+                                    'Prefer NIPPV over CPAP for post-extubation support in EPT infants'
+                                ],
+                                type: 'targets'
+                            }
+                        ]
+                    },
+                    layer2: {
+                        title: 'Why It Matters',
+                        subtitle: 'The evidence behind the interventions',
+                        icon: '📚',
+                        duration: '2-3 minutes',
+                        sections: [
+                            {
+                                title: 'Caffeine',
+                                content: 'CAP trial demonstrated reduced BPD and improved long-term motor outcomes. Works by reducing apnea, facilitating earlier extubation, and potentially direct anti-inflammatory effects on developing lungs.',
+                                evidence: 'Level 1 evidence - Start all ELBW infants on Day 1'
+                            },
+                            {
+                                title: 'Lung-Protective Ventilation',
+                                content: 'Volume-targeted ventilation with low tidal volumes (4-6 mL/kg) reduces volutrauma. Animal studies clearly link baro/volutrauma to BPD-like changes. Meta-analyses show VTV reduces BPD compared to pressure-limited ventilation.',
+                                evidence: 'Level 1 evidence - Cochrane review supports VTV'
+                            },
+                            {
+                                title: 'Vitamin A',
+                                content: 'EPT infants are vitamin A deficient. Vitamin A is essential for epithelial cell maturation in airways. Modest reduction in BPD shown in trials, though recent data are mixed. Benefits appear small but established.',
+                                evidence: 'Level 1 evidence - Consider if drug is available'
+                            },
+                            {
+                                title: 'Oxygen Targets',
+                                content: 'NeOProM trials showed lower SpO₂ targets (85-89%) increased mortality and NEC risk. Higher targets (91-95%) increased ROP. Current recommendation balances these risks at 90-95%.',
+                                evidence: 'Level 1 evidence - SpO₂ 90-95% is the sweet spot'
+                            },
+                            {
+                                title: 'What Doesn\'t Work',
+                                content: 'Routine prophylactic: systemic steroids, inhaled nitric oxide, diuretics, bronchodilators. These have no proven benefit for prevention and may cause harm.',
+                                warning: true
+                            }
+                        ]
+                    },
+                    layer3: {
+                        title: 'Clinical Application',
+                        subtitle: 'How this plays out at the bedside',
+                        icon: '🏥',
+                        duration: '5 minutes',
+                        cases: [
+                            {
+                                title: 'Case 1: Day 1 Setup',
+                                scenario: '25+3 week infant, 680g, intubated in DR, received surfactant',
+                                current: 'SIMV-VG: PIP 18, PEEP 5, Rate 40, TV 4.2 mL/kg, FiO₂ 35%',
+                                questions: [
+                                    {
+                                        q: 'What do you start TODAY?',
+                                        a: 'Caffeine loading dose (within 24h), Vitamin A if available (within 24h), Fluid plan (80-100 mL/kg), Request mother\'s breast milk, Confirm VTV settings appropriate'
+                                    },
+                                    {
+                                        q: 'Gas shows pH 7.30, pCO₂ 55, pO₂ 58, SpO₂ 92%. What do you do?',
+                                        a: 'NOTHING. This is perfect. SpO₂ in target range (90-95%). pCO₂ 55 with pH 7.30 is acceptable permissive hypercapnia. Resist urge to "normalize" the gas.'
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Case 2: Extubation Decision (Day 5)',
+                                scenario: 'Same infant, now DOL 5',
+                                current: 'SIMV-VG: PIP 16, PEEP 5, Rate 25, TV 4.3 mL/kg, FiO₂ 28%',
+                                questions: [
+                                    {
+                                        q: 'Ready to extubate. What\'s your plan?',
+                                        a: 'Extubate to NIPPV (not CPAP, not HFNC). NIPPV has better success rates in EPT infants. Settings: PIP 16, PEEP 6, Rate 25. Keep caffeine going.'
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Case 3: Steroid Discussion (Day 17)',
+                                scenario: 'Failed extubation, now DOL 17, still intubated',
+                                current: 'SIMV-VG: PIP 18, PEEP 6, Rate 30, TV 4.5 mL/kg, FiO₂ 45%, failing to wean',
+                                questions: [
+                                    {
+                                        q: 'Team asks about steroids. Your approach?',
+                                        a: 'THIS is when you consider steroids. >2 weeks old, ventilator-dependent, FiO₂ >40%, failing wean attempts. Counsel family about risks (CP, GI perforation, hyperglycemia) and benefits. If they agree, use LOW-DOSE dexamethasone (DART protocol: 0.89 mg/kg over 10 days). NOT routine - selective use with shared decision-making.'
+                                    }
+                                ]
+                            }
+                        ],
+                        pearls: [
+                            'Every extra day on the ventilator increases BPD risk - extubate as soon as ready',
+                            'Don\'t chase "normal" blood gases - permissive hypercapnia is your friend',
+                            'NIPPV > CPAP for extremely preterm infants post-extubation',
+                            'Vitamin A requires IM injections 3×/week - discuss logistics with nursing',
+                            'Early steroids (<8 days) = BAD. Late steroids (2-4 weeks, selective) = MAYBE'
+                        ]
+                    },
+                    layer4: {
+                        title: 'Deep Dive',
+                        subtitle: 'Controversies, protocols, and nuances',
+                        icon: '🔬',
+                        duration: '10+ minutes',
+                        topics: [
+                            {
+                                title: 'The Steroid Controversy',
+                                content: 'Early dexamethasone (<8 days) reduces BPD but increases cerebral palsy and neurodevelopmental impairment - this is why it\'s NOT recommended routinely. Late dexamethasone (>7 days) has less clear neurodevelopmental risk but still concerning. Hydrocortisone studied mostly in early period (<8 days) - may be safer but efficacy less clear. Current approach: reserve systemic steroids for high-risk infants at 2-4 weeks who are failing to wean, use lowest effective dose, involve families in decision.'
+                            },
+                            {
+                                title: 'Vitamin A: Why the Controversy?',
+                                content: 'Original trial (Tyson 1999) showed modest benefit. But: requires painful IM injections 3×/week, drug shortages common, recent retrospective data showed no difference when vitamin A was unavailable nationally. Post-hoc analysis suggested benefit mainly in LOWER-risk infants (paradoxical). Many centers don\'t use it due to availability/logistics. If available at your center, reasonable to use in ventilated ELBW infants.'
+                            },
+                            {
+                                title: 'Oxygen Saturation Target Debates',
+                                content: 'Five large RCTs (NeOProM collaboration) compared 85-89% vs 91-95%. Lower targets: increased death and NEC. Higher targets: increased ROP. No difference in major disability at 18-24 months. Current consensus 90-95% balances risks, but some suggest 88-92% with upper alarm at 96%. The "right" answer may depend on your population\'s baseline ROP vs mortality risk.'
+                            },
+                            {
+                                title: 'CPAP vs NIPPV vs HFNC',
+                                content: 'For PRIMARY support (avoiding intubation): CPAP proven effective, NIPPV may be slightly better. For POST-EXTUBATION support: NIPPV superior to CPAP in EPT infants, especially <28 weeks. HFNC: higher failure rate in EPT infants, not recommended as primary support in this population. Reserve HFNC for older/larger infants or step-down from CPAP/NIPPV.'
+                            },
+                            {
+                                title: 'Your Unit-Specific Approach',
+                                content: 'Talk with your attending about: Does your unit stock vitamin A? What\'s your actual steroid protocol? Do you use NIPPV or CPAP preferentially? What are your caffeine loading/maintenance doses? Understanding local practice patterns helps you function effectively on service.'
+                            }
+                        ],
+                        protocols: {
+                            caffeine: {
+                                loading: '20 mg/kg IV (caffeine citrate) = 10 mg/kg caffeine base',
+                                maintenance: '5-10 mg/kg/day (we typically use 5 mg/kg)',
+                                timing: 'Start within 24 hours of birth',
+                                duration: 'Continue until 34-36 weeks PMA or off respiratory support'
+                            },
+                            vitaminA: {
+                                dose: '5000 IU IM',
+                                frequency: '3 times per week (Monday/Wednesday/Friday)',
+                                duration: '4 weeks',
+                                indication: 'Ventilated ELBW infants, if drug available'
+                            },
+                            dexamethasone: {
+                                protocol: 'DART: 0.89 mg/kg total over 10 days',
+                                schedule: '0.075 mg/kg q12h × 3d → 0.05 mg/kg q12h × 3d → 0.025 mg/kg q12h × 2d → 0.01 mg/kg q12h × 2d',
+                                timing: '2-4 weeks postnatal age, ventilator-dependent',
+                                counseling: 'MUST discuss risks with family: GI perforation, hyperglycemia, possible neurodevelopmental effects'
+                            }
+                        }
+                    }
+                }
+            },
+            feeding: {
+                id: 'feeding',
+                title: 'Feeding Practices & NEC Recognition',
+                subtitle: 'Safe feeding advancement and early NEC detection',
+                icon: '🍼',
+                duration: '12 min',
+                layers: 4,
+                content: {
+                    layer1: {
+                        title: 'Quick Facts',
+                        subtitle: 'Core principles of preterm feeding',
+                        icon: '⚡',
+                        duration: '30 seconds',
+                        sections: [
+                            {
+                                title: 'Feeding Basics',
+                                items: [
+                                    'Mother\'s own milk is ALWAYS preferred (or donor milk)',
+                                    'Start trophic feeds (10-20 mL/kg/day) within 24-48 hours if stable',
+                                    'Advance by 20-30 mL/kg/day in EPT infants (can be faster in larger babies)',
+                                    'Goal: Full feeds ~140-160 mL/kg/day by end of week 2',
+                                    'Fortify breast milk when at 100 mL/kg/day (for growth)',
+                                ],
+                                type: 'checklist'
+                            },
+                            {
+                                title: 'RED FLAGS - Hold Feeds If:',
+                                items: [
+                                    'Bilious or bloody gastric residuals',
+                                    'Abdominal distension (especially if tense/shiny)',
+                                    'Visible bowel loops or discoloration',
+                                    'Hemodynamic instability requiring pressors',
+                                    'Bloody stools (NOT just streaks in stooling infant)',
+                                ],
+                                type: 'warning'
+                            }
+                        ]
+                    },
+                    layer2: {
+                        title: 'Why It Matters',
+                        subtitle: 'The science of feeding and NEC',
+                        icon: '📚',
+                        duration: '2-3 minutes',
+                        sections: [
+                            {
+                                title: 'Why Breast Milk Matters',
+                                content: 'Human milk contains immunoglobulins (especially IgA), growth factors, oligosaccharides that promote healthy gut microbiome. Reduces NEC risk by 50-60% compared to formula. Even in small amounts (trophic feeds), it "primes" the gut. Donor milk is second-best but still superior to formula for NEC prevention.',
+                                evidence: 'Level 1 evidence - Exclusive human milk reduces NEC'
+                            },
+                            {
+                                title: 'Why We Start Feeds Early',
+                                content: 'Trophic (minimal enteral) feeding promotes gut maturation, hormone release, better tolerance when advancing later. Gut was designed to receive amniotic fluid in utero - it expects luminal nutrition. Prolonged NPO leads to mucosal atrophy. Early trophic feeds (even 10 mL/kg/day) improve outcomes.',
+                                evidence: 'Established practice - delays increase TPN complications'
+                            },
+                            {
+                                title: 'Why We Advance Slowly',
+                                content: 'Preterm gut has immature motility, barrier function, immune defenses. Rapid advancement (>30-35 mL/kg/day in ELBW) may increase NEC risk. Balance: go fast enough to minimize TPN days, slow enough to be safe. EPT infants: 20-30 mL/kg/day is reasonable.',
+                                evidence: 'Observational data - faster may increase NEC in smallest babies'
+                            },
+                            {
+                                title: 'NEC Pathophysiology (Simplified)',
+                                content: 'Immature gut + ischemic insult + abnormal bacterial colonization + feeding = inflammation cascade → bowel necrosis. Early signs: feeding intolerance, ileus. Progressive: pneumatosis, portal venous gas, perforation. Key: catch it EARLY before perforation/shock.',
+                                warning: true
+                            },
+                            {
+                                title: 'Gastric Residuals: The Debate',
+                                content: 'Routine checking of gastric residuals may not be helpful and may lead to unnecessary feed cessation. Recent data suggest NOT routinely checking residuals in stable infants. However, if checked and grossly abnormal (bilious, bloody, large volume in context of other symptoms), must respond appropriately.',
+                                evidence: 'Evolving practice - some units no longer check routine residuals'
+                            }
+                        ]
+                    },
+                    layer3: {
+                        title: 'Clinical Application',
+                        subtitle: 'Feeding decisions at the bedside',
+                        icon: '🏥',
+                        duration: '5 minutes',
+                        cases: [
+                            {
+                                title: 'Case 1: Starting Feeds (Day 2)',
+                                scenario: '26-week infant, DOL 2, on NIPPV, UAC removed, UVC still in',
+                                current: 'NPO, TPN/IL running via UVC',
+                                questions: [
+                                    {
+                                        q: 'Ready to start feeds?',
+                                        a: 'YES. Stable, >24 hours old, no pressors, no concerns for NEC. Start trophic feeds: mother\'s milk 10-20 mL/kg/day (divide q3h or q4h). Can do this even with UVC in place. Don\'t wait for "full" stability - early trophic feeds are safe and beneficial.'
+                                    },
+                                    {
+                                        q: 'Mother pumping but milk not in yet. What do you give?',
+                                        a: 'Donor breast milk while waiting for mother\'s milk. Do NOT use formula as first option in ELBW infant. Human milk (any source) > formula for NEC risk.'
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Case 2: Advancing Feeds (Day 5)',
+                                scenario: 'Same baby, DOL 5, tolerating trophic feeds',
+                                current: 'Mother\'s milk 20 mL/kg/day, TPN/IL still providing most calories',
+                                questions: [
+                                    {
+                                        q: 'How fast do you advance?',
+                                        a: 'For 26-weeker: advance by 20-30 mL/kg/day. Could go: Day 5 (20) → Day 6 (40) → Day 7 (60) → Day 8 (80) → Day 9 (100) → Day 10 (120) → Day 11 (140-160). Slower for smaller/sicker babies. Faster (30-40 mL/kg/day) OK for bigger/older infants.'
+                                    },
+                                    {
+                                        q: 'When do you fortify?',
+                                        a: 'When at ~100 mL/kg/day and tolerating well. Start with 22 kcal/oz fortification. Eventually advance to 24-26 kcal/oz for growth. Fortification provides more protein/calories in less volume.'
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Case 3: Feeding Intolerance (Day 8)',
+                                scenario: '24-week infant, DOL 8, on 60 mL/kg/day feeds',
+                                current: 'Residuals noted by nursing: "50% of feed volume, clear/bilious"',
+                                questions: [
+                                    {
+                                        q: 'What do you do?',
+                                        a: 'ASSESS THE BABY, not just the residual. Examine abdomen: soft? distended? tender? Loops visible? Any bloody stools? Vital signs stable? If exam normal, baby comfortable, no red flags → can continue feeds. Bilious residual in context of normal exam may just be reflux/delayed gastric emptying. If ANY concerning findings on exam → hold feeds, get X-ray, call attending.'
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Case 4: Possible NEC (Day 12)',
+                                scenario: '25-week infant, DOL 12, was on full feeds',
+                                current: 'Nurse concerned: "Not acting right, belly looks bigger, had a large bilious residual"',
+                                questions: [
+                                    {
+                                        q: 'Your immediate actions?',
+                                        a: 'GO SEE THE BABY NOW. Examine: vitals (HR up? BP down?), abdomen (distended? tense? loops? discoloration?), activity level. Hold feeds immediately. Place OG to decompress. Get KUB stat (looking for pneumatosis, portal venous gas, free air). CBC with diff (looking for thrombocytopenia, bandemia, neutropenia). Call attending. Get IV access if don\'t have it. May need fluids/pressors. Anticipate antibiotics (amp/gent + metronidazole or pip-tazo).'
+                                    },
+                                    {
+                                        q: 'KUB shows pneumatosis in RLQ. Now what?',
+                                        a: 'Confirmed NEC. NPO (at least 10-14 days). Antibiotics (usually 10-14 days). Frequent exams (q2-4h). Serial KUBs (q6-12h initially, then daily). Call surgery to make them aware. Watch for: perforation (sudden decompensation, free air), need for pressors/blood products, worsening acidosis. Many cases will medically manage, but surgery needs to be looped in early.'
+                                    }
+                                ]
+                            }
+                        ],
+                        pearls: [
+                            'When in doubt about feeding safety, HOLD feeds and examine the baby',
+                            'Bilious residual + distended abdomen + lethargy = NEC until proven otherwise',
+                            'Don\'t just treat the residual - treat the baby (if they look good, feeds may be OK)',
+                            'Call surgery early for suspected NEC - they want to know before perforation',
+                            'Mother\'s milk is medicine - fight for every drop'
+                        ]
+                    },
+                    layer4: {
+                        title: 'Deep Dive',
+                        subtitle: 'Advanced feeding management and NEC staging',
+                        icon: '🔬',
+                        duration: '10+ minutes',
+                        topics: [
+                            {
+                                title: 'The Gastric Residual Controversy',
+                                content: 'Multiple studies now show that routine checking of gastric residuals does NOT improve outcomes and may delay time to full feeds. Some high-performing NICUs have eliminated routine residual checks entirely, relying instead on clinical assessment (abdominal exam, vital signs, activity). However, in a sick-appearing infant or one with other symptoms, residuals can provide useful information. The key is not reflexively holding feeds for ANY residual - put it in clinical context.'
+                            },
+                            {
+                                title: 'Standardized vs Individualized Feeding Protocols',
+                                content: 'Standardized feeding protocols (advance X mL/kg/day unless Y criteria met) have been shown to reduce variation and improve time to full feeds without increasing NEC. However, they must allow for clinical judgment - "If the baby doesn\'t look right, stop" should always override the protocol. Our WhiteBook protocols provide structure while allowing flexibility.'
+                            },
+                            {
+                                title: 'NEC Staging (Modified Bell\'s)',
+                                content: 'Stage IA (Suspected): Systemic signs (apnea, brady, temp instability) + feeding intolerance, no X-ray findings. Stage IB (Suspected): Same + bloody stools. Stage IIA (Definite): Mild systemic signs + pneumatosis on X-ray. Stage IIB (Definite): More severe systemic signs + pneumatosis + portal venous gas ± ascites. Stage IIIA (Advanced): Severe systemic signs, signs of peritonitis, intact bowel. Stage IIIB (Advanced): Same + perforation. Staging guides treatment intensity and surgical consultation.'
+                            },
+                            {
+                                title: 'When to Call Surgery for NEC',
+                                content: 'Absolute indications: pneumoperitoneum (free air). Relative indications: clinical deterioration despite maximal medical therapy, fixed dilated loop on serial X-rays, abdominal wall erythema/induration, paracentesis with bacteria/food particles. Surgeons prefer EARLY notification - call when you suspect Stage IIA or higher, even if not ready for OR yet. They can follow with you.'
+                            },
+                            {
+                                title: 'Probiotics: Not Routine in US',
+                                content: 'Meta-analyses show probiotics reduce NEC and mortality in preterm infants. Widely used in many countries. NOT routinely used in US due to: lack of FDA-regulated products for this indication, concerns about strain selection, case reports of probiotic sepsis in immunocompromised hosts. Some US centers use them, most don\'t. May change in future as regulatory landscape evolves.'
+                            },
+                            {
+                                title: 'Feeding After NEC',
+                                content: 'After medical NEC, typically NPO 10-14 days (antibiotics for same duration). Re-feed slowly: start with 10-20 mL/kg/day, advance by 10-20 mL/kg/day (slower than initial feeds). Use breast milk if possible. Watch closely. If post-surgical NEC or extensive resection, may need much longer NPO period, different feeding approach, +/- ostomy. Discuss with surgery.'
+                            }
+                        ],
+                        protocols: {
+                            trophicFeeds: {
+                                when: 'Start within 24-48h if hemodynamically stable',
+                                volume: '10-20 mL/kg/day',
+                                duration: 'Maintain 3-5 days, then advance',
+                                note: 'Can start even if on UAC/UVC, even if on some pressors (if stable)'
+                            },
+                            advancement: {
+                                elbw: '20-30 mL/kg/day',
+                                vlbw: '30-35 mL/kg/day',
+                                older: 'Up to 40 mL/kg/day if tolerating well',
+                                goal: 'Full feeds (~140-160 mL/kg/day) by 10-14 days in most infants'
+                            },
+                            fortification: {
+                                when: 'At ~100 mL/kg/day, tolerating well',
+                                initial: '22 kcal/oz (add fortifier to bring from 20→22)',
+                                goal: '24-26 kcal/oz for growth',
+                                note: 'Some add extra protein via human milk fortifier or Beneprotein'
+                            },
+                            necManagement: {
+                                holdFeeds: 'NPO immediately when suspected',
+                                ogTube: 'Place/vent OG to low intermittent suction',
+                                fluids: 'Increase IV fluids, may need bolus/pressors',
+                                antibiotics: 'Amp/gent + flagyl OR pip-tazo (10-14 days)',
+                                imaging: 'KUB stat, then q6-12h × 2-3, then daily',
+                                surgery: 'Call early for Stage IIA or higher'
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        function App() {
+            const [currentModule, setCurrentModule] = useState(null);
+            const [currentLayer, setCurrentLayer] = useState(1);
+            const [completedLayers, setCompletedLayers] = useState([]);
+            const [expandedSections, setExpandedSections] = useState({});
+
+            const handleModuleSelect = (moduleId) => {
+                setCurrentModule(moduleId);
+                setCurrentLayer(1);
+                setCompletedLayers([]);
+                setExpandedSections({});
+            };
+
+            const handleBackToLibrary = () => {
+                setCurrentModule(null);
+                setCurrentLayer(1);
+                setCompletedLayers([]);
+            };
+
+            const handleLayerComplete = () => {
+                if (!completedLayers.includes(currentLayer)) {
+                    setCompletedLayers([...completedLayers, currentLayer]);
+                }
+            };
+
+            const handleNextLayer = () => {
+                handleLayerComplete();
+                setCurrentLayer(currentLayer + 1);
+                window.scrollTo(0, 0);
+            };
+
+            const handlePreviousLayer = () => {
+                if (currentLayer > 1) {
+                    setCurrentLayer(currentLayer - 1);
+                    window.scrollTo(0, 0);
+                }
+            };
+
+            const handleLayerSelect = (layer) => {
+                setCurrentLayer(layer);
+                window.scrollTo(0, 0);
+            };
+
+            const toggleSection = (sectionId) => {
+                setExpandedSections({
+                    ...expandedSections,
+                    [sectionId]: !expandedSections[sectionId]
+                });
+            };
+
+            const isLastLayer = currentModule && currentLayer === MODULES[currentModule].layers;
+
+            return (
+                <div>
+                    <div className="app-header">
+                        <div className="header-content">
+                            <div className="header-left">
+                                {currentModule && (
+                                    <button className="back-button" onClick={handleBackToLibrary}>
+                                        <i className="fas fa-arrow-left"></i>
+                                        Library
+                                    </button>
+                                )}
+                                <div>
+                                    <div className="header-title">
+                                        {currentModule ? MODULES[currentModule].title : 'NICU Learning Modules'}
+                                    </div>
+                                    {!currentModule && (
+                                        <div className="header-subtitle">Interactive, layered learning</div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="container">
+                        {!currentModule ? (
+                            <ModuleLibrary onSelectModule={handleModuleSelect} />
+                        ) : (
+                            <ModuleContent 
+                                module={MODULES[currentModule]}
+                                currentLayer={currentLayer}
+                                completedLayers={completedLayers}
+                                onLayerSelect={handleLayerSelect}
+                                onNext={handleNextLayer}
+                                onPrevious={handlePreviousLayer}
+                                onComplete={handleLayerComplete}
+                                isLastLayer={isLastLayer}
+                                expandedSections={expandedSections}
+                                toggleSection={toggleSection}
+                            />
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        function ModuleLibrary({ onSelectModule }) {
+            return (
+                <>
+                    <div className="library-intro">
+                        <h2>Welcome to NICU Learning</h2>
+                        <p>Each module has 4 layers - start with quick facts, go as deep as you want. Stop anytime, pick up where you left off.</p>
+                    </div>
+
+                    <div className="module-grid">
+                        {Object.values(MODULES).map(module => (
+                            <div 
+                                key={module.id}
+                                className="module-card"
+                                onClick={() => onSelectModule(module.id)}
+                            >
+                                <div className="module-header">
+                                    <div className="module-icon">{module.icon}</div>
+                                    <div className="module-info">
+                                        <div className="module-title">{module.title}</div>
+                                        <div className="module-subtitle">{module.subtitle}</div>
+                                    </div>
+                                </div>
+                                <div className="module-meta">
+                                    <div className="meta-item">
+                                        <i className="fas fa-clock meta-icon"></i>
+                                        {module.duration}
+                                    </div>
+                                    <div className="meta-item">
+                                        <i className="fas fa-layer-group meta-icon"></i>
+                                        {module.layers} layers
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            );
+        }
+
+        function ModuleContent({ 
+            module, 
+            currentLayer, 
+            completedLayers, 
+            onLayerSelect, 
+            onNext, 
+            onPrevious,
+            onComplete,
+            isLastLayer,
+            expandedSections,
+            toggleSection
+        }) {
+            const layerKey = `layer${currentLayer}`;
+            const layerContent = module.content[layerKey];
+
+            if (!layerContent) return null;
+
+            const isCompleted = completedLayers.includes(currentLayer);
+
+            return (
+                <>
+                    <div className="layer-nav">
+                        <div className="layer-progress">
+                            {[1, 2, 3, 4].map(layer => (
+                                <div 
+                                    key={layer}
+                                    className={`layer-step ${layer === currentLayer ? 'active' : ''} ${completedLayers.includes(layer) ? 'completed' : ''}`}
+                                    onClick={() => onLayerSelect(layer)}
+                                >
+                                    <div className="layer-number">
+                                        {completedLayers.includes(layer) ? <i className="fas fa-check"></i> : layer}
+                                    </div>
+                                    <div className="layer-label">
+                                        {layer === 1 ? 'Quick' : layer === 2 ? 'Evidence' : layer === 3 ? 'Clinical' : 'Deep'}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="content-card">
+                        <div className="layer-header">
+                            <div className="layer-icon-large">{layerContent.icon}</div>
+                            <div>
+                                <div className="layer-title">{layerContent.title}</div>
+                                <div className="layer-description">{layerContent.subtitle}</div>
+                            </div>
+                        </div>
+
+                        {layerContent.sections && layerContent.sections.map((section, idx) => (
+                            <div key={idx} className="content-section">
+                                {section.title && (
+                                    <div className="section-title">
+                                        <i className={`fas ${section.type === 'warning' ? 'fa-exclamation-triangle' : section.type === 'targets' ? 'fa-bullseye' : 'fa-check-circle'}`}></i>
+                                        {section.title}
+                                    </div>
+                                )}
+                                {section.items && (
+                                    <ul className="bullet-list">
+                                        {section.items.map((item, i) => (
+                                            <li key={i}>
+                                                <i className={`fas ${section.type === 'warning' ? 'fa-exclamation-circle' : 'fa-check'} bullet-icon`}></i>
+                                                <span>{item}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                {section.content && (
+                                    <div className={section.warning ? 'warning-box' : section.evidence ? 'info-box' : ''}>
+                                        {section.warning && (
+                                            <div className="warning-box-header">
+                                                <i className="fas fa-exclamation-triangle"></i>
+                                                Important
+                                            </div>
+                                        )}
+                                        {section.evidence && (
+                                            <div className="info-box-header">
+                                                <i className="fas fa-flask"></i>
+                                                Evidence Level
+                                            </div>
+                                        )}
+                                        <div className={section.warning ? 'warning-box-content' : section.evidence ? 'info-box-content' : ''}>
+                                            {section.content}
+                                            {section.evidence && (
+                                                <div style={{marginTop: '0.5rem', fontWeight: 600}}>
+                                                    → {section.evidence}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+
+                        {layerContent.cases && (
+                            <div className="content-section">
+                                <div className="section-title">
+                                    <i className="fas fa-procedures"></i>
+                                    Bedside Scenarios
+                                </div>
+                                {layerContent.cases.map((caseItem, idx) => (
+                                    <div key={idx} className="case-box">
+                                        <div className="case-header">
+                                            <i className="fas fa-user-md"></i>
+                                            {caseItem.title}
+                                        </div>
+                                        <div className="case-content">
+                                            <p><strong>Scenario:</strong> {caseItem.scenario}</p>
+                                            {caseItem.current && <p><strong>Current:</strong> {caseItem.current}</p>}
+                                            {caseItem.questions.map((q, qIdx) => (
+                                                <div key={qIdx} style={{marginTop: '1rem'}}>
+                                                    <div className="expandable-section">
+                                                        <div 
+                                                            className="expandable-header"
+                                                            onClick={() => toggleSection(`case-${idx}-${qIdx}`)}
+                                                        >
+                                                            <div className="expandable-title">{q.q}</div>
+                                                            <i className={`fas fa-chevron-down expandable-icon ${expandedSections[`case-${idx}-${qIdx}`] ? 'expanded' : ''}`}></i>
+                                                        </div>
+                                                        <div className={`expandable-content ${expandedSections[`case-${idx}-${qIdx}`] ? 'expanded' : ''}`}>
+                                                            <div className="expandable-body">
+                                                                <strong>Approach:</strong> {q.a}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {layerContent.pearls && (
+                            <div className="success-box">
+                                <div className="success-box-header">
+                                    <i className="fas fa-gem"></i>
+                                    Clinical Pearls
+                                </div>
+                                <div className="success-box-content">
+                                    <ul className="bullet-list" style={{background: 'transparent', border: 'none'}}>
+                                        {layerContent.pearls.map((pearl, i) => (
+                                            <li key={i} style={{background: 'rgba(34, 197, 94, 0.1)', borderColor: '#22c55e'}}>
+                                                <i className="fas fa-check-circle bullet-icon" style={{color: '#22c55e'}}></i>
+                                                <span>{pearl}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+
+                        {layerContent.topics && (
+                            <div className="content-section">
+                                {layerContent.topics.map((topic, idx) => (
+                                    <div key={idx} style={{marginBottom: '1rem'}}>
+                                        <div className="expandable-section">
+                                            <div 
+                                                className="expandable-header"
+                                                onClick={() => toggleSection(`topic-${idx}`)}
+                                            >
+                                                <div className="expandable-title">{topic.title}</div>
+                                                <i className={`fas fa-chevron-down expandable-icon ${expandedSections[`topic-${idx}`] ? 'expanded' : ''}`}></i>
+                                            </div>
+                                            <div className={`expandable-content ${expandedSections[`topic-${idx}`] ? 'expanded' : ''}`}>
+                                                <div className="expandable-body">{topic.content}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {layerContent.protocols && (
+                            <div className="content-section">
+                                <div className="section-title">
+                                    <i className="fas fa-clipboard-list"></i>
+                                    Quick Reference Protocols
+                                </div>
+                                {Object.entries(layerContent.protocols).map(([key, protocol], idx) => (
+                                    <div key={idx} style={{marginBottom: '1rem'}}>
+                                        <div className="expandable-section">
+                                            <div 
+                                                className="expandable-header"
+                                                onClick={() => toggleSection(`protocol-${idx}`)}
+                                            >
+                                                <div className="expandable-title">
+                                                    {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                                                </div>
+                                                <i className={`fas fa-chevron-down expandable-icon ${expandedSections[`protocol-${idx}`] ? 'expanded' : ''}`}></i>
+                                            </div>
+                                            <div className={`expandable-content ${expandedSections[`protocol-${idx}`] ? 'expanded' : ''}`}>
+                                                <div className="expandable-body">
+                                                    {Object.entries(protocol).map(([pKey, pValue], pIdx) => (
+                                                        <p key={pIdx} style={{marginBottom: '0.5rem'}}>
+                                                            <strong>{pKey.charAt(0).toUpperCase() + pKey.slice(1).replace(/([A-Z])/g, ' $1')}:</strong> {pValue}
+                                                        </p>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {isLastLayer && isCompleted ? (
+                        <div className="completion-card">
+                            <div className="completion-icon">
+                                <i className="fas fa-trophy"></i>
+                            </div>
+                            <div className="completion-title">Module Complete!</div>
+                            <div className="completion-message">
+                                You've completed all layers of {module.title}. Review anytime or explore another module.
+                            </div>
+                        </div>
+                    ) : null}
+
+                    <div className="nav-buttons">
+                        {currentLayer > 1 && (
+                            <button className="btn btn-secondary" onClick={onPrevious}>
+                                <i className="fas fa-arrow-left"></i>
+                                Previous
+                            </button>
+                        )}
+                        {!isLastLayer ? (
+                            <button className="btn btn-primary" onClick={onNext}>
+                                Next Layer
+                                <i className="fas fa-arrow-right"></i>
+                            </button>
+                        ) : (
+                            <button className="btn btn-primary" onClick={onComplete}>
+                                Mark Complete
+                                <i className="fas fa-check"></i>
+                            </button>
+                        )}
+                    </div>
+                </>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
