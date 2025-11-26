@@ -1,0 +1,87 @@
+{
+  "sections": [
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "type": "h2",
+      "children": [
+        {
+          "id": "orientation",
+          "title": "Orientation",
+          "type": "h3",
+          "children": [
+            {
+              "type": "text",
+              "content": "Short description of unit, resident workroom, location of important equipment, tools, etc..."
+            }
+          ]
+        },
+        {
+          "id": "infection-control",
+          "title": "Infection Control",
+          "type": "h3",
+          "children": [
+            { "type": "text", "content": "As soon as you arrive to work..." },
+            { "type": "text", "content": "Remove watches or jewelry" }
+          ]
+        },
+        {
+          "id": "admissions",
+          "title": "Admissions",
+          "type": "h3",
+          "children": [
+            { "type": "text", "content": "Criteria for admission to Well-Baby Nursery..." }
+          ]
+        },
+        {
+          "id": "transfers",
+          "title": "Transfers",
+          "type": "h3",
+          "children": [
+            { "type": "text", "content": "8 hr if admitted for hypothermia..." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "general-nicu-care",
+      "title": "GENERAL NICU CARE",
+      "type": "h1",
+      "children": [
+        {
+          "id": "maternal-disorders-affecting-newborn",
+          "title": "Maternal Disorders Affecting Newborn",
+          "type": "h2",
+          "children": [
+            {
+              "id": "infant-of-a-diabetic-mother",
+              "title": "Infant of a diabetic mother",
+              "type": "h3",
+              "children": [
+                {
+                  "type": "text",
+                  "content": "Maternal hyperglycemia leads to fetal hyperglycemia and fetal hyperinsulinism..."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "searchIndex": [
+    {
+      "id": "infant-of-a-diabetic-mother",
+      "title": "Infant of a diabetic mother",
+      "path": "GENERAL NICU CARE > Maternal Disorders Affecting Newborn > Infant of a diabetic mother",
+      "type": "h3"
+    },
+    {
+      "id": "infant-of-a-diabetic-mother",
+      "title": "Infant of a diabetic mother",
+      "path": "GENERAL NICU CARE > Maternal Disorders Affecting Newborn > Infant of a diabetic mother",
+      "content": "Maternal hyperglycemia → fetal hyperglycemia → fetal hyperinsulinism...",
+      "type": "content"
+    }
+  ]
+}
