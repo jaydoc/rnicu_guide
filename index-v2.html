@@ -14,17 +14,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
         .gradient-bg {
-            background: radial-gradient(circle at top left, #e0f2fe, transparent 50%),
-                        radial-gradient(circle at top right, #e0e7ff, transparent 50%),
-                        radial-gradient(circle at bottom, #fce7f3, transparent 50%),
-                        #f9fafb;
-        }
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            backdrop-filter: blur(8px);
-            background-color: rgba(255, 255, 255, 0.9);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         .section-card {
             transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -33,69 +23,15 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -10px rgba(15, 23, 42, 0.3);
         }
-        .pill-badge {
-            border-radius: 9999px;
-        }
-        .scroll-smooth {
-            scroll-behavior: smooth;
-        }
-        .sidebar-link {
-            transition: background-color 0.15s ease, color 0.15s ease;
-        }
-        .sidebar-link:hover {
-            background-color: #eef2ff;
-            color: #4f46e5;
-        }
-        .sidebar-link-active {
-            background-color: #4f46e5;
-            color: white;
-        }
         .content-card {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        .timeline-line {
-            width: 2px;
-            background: linear-gradient(to bottom, #4f46e5, #a855f7);
-        }
-        .fade-in {
-            animation: fadeIn 0.25s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .badge-soft {
-            background-color: #eef2ff;
-            color: #4f46e5;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            padding: 0.15rem 0.6rem;
-        }
-        .badge-soft-green {
-            background-color: #ecfdf5;
-            color: #16a34a;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            padding: 0.15rem 0.6rem;
-        }
-        .badge-soft-red {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            padding: 0.15rem 0.6rem;
-        }
-        .badge-soft-amber {
-            background-color: #fffbeb;
-            color: #d97706;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            padding: 0.15rem 0.6rem;
-        }
-        .pill-tab {
-            border-radius: 9999px;
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background-color: rgba(249, 250, 251, 0.95);
+            backdrop-filter: blur(8px);
         }
         .ai-bubble {
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
@@ -115,7 +51,7 @@
         const CORRECT_PASSWORD = "rnicu2024";
 
         // Load whitebook data
-        const WHITEBOOK_DATA = {"sections": [{"id": "introduction-overview", "title": "Introduction & Overview", "description": "Welcome to the RNICU White Book for Pediatric Residents. This guide is designed to support you during your rotation with practical, concise, and clinically relevant information.", "children": [{"id": "rotation-overview", "title": "Rotation Overview", "description": "What to expect during your RNICU rotation.", "content": [{"type": "text", "content": "Welcome to the Regional Neonatal Intensive Care Unit (RNICU). During this rotation, you will care for critically ill neonates and learn key skills in neonatal resuscitation, stabilization, and ongoing management."}, {"type": "list", "style": "disc", "title": "Goals of the Rotation", "items": ["Develop a structured approach to the assessment and management of sick neonates.", "Become familiar with common RNICU protocols and pathways.", "Understand when to escalate care and involve subspecialty services.", "Work effectively within a multidisciplinary NICU team."]}, {"type": "list", "style": "decimal", "title": "Your Responsibilities", "items": ["Pre-rounding and presenting on assigned patients.", "Writing daily notes and orders under supervision.", "Participating in family discussions and care conferences, as appropriate.", "Attending and participating in resuscitations, admissions, and procedures.", "Communicating effectively with nursing staff and respiratory therapists."]}]}, {"id": "daily-schedule", "title": "Daily Schedule & Workflow", "description": "Structure of a typical RNICU day.", "content": [{"type": "text", "content": "The daily flow in the RNICU can be busy and dynamic. Having a mental map of the day will help you stay organized and reduce stress."}, {"type": "timeline", "title": "Typical RNICU Weekday Schedule", "items": [{"time": "06:30–07:00", "title": "Pre-rounding", "details": ["Review overnight events in the chart.", "Check vital signs, respiratory support, and labs.", "Examine your assigned babies.", "Formulate a daily plan for each patient."]}, {"time": "07:00–07:30", "title": "Team Huddle / Sign-out", "details": ["Receive handoff from night team.", "Clarify any urgent issues or pending studies."]}, {"time": "07:30–11:30", "title": "Morning Rounds", "details": ["Structured patient presentations.", "Discuss active problems and plans.", "Order entry during or immediately after rounds."]}, {"time": "11:30–16:30", "title": "Procedures, Notes, and Follow-up", "details": ["Write notes.", "Follow up labs and imaging.", "Participate in admissions, resuscitations, and procedures."]}, {"time": "16:30–17:30", "title": "Evening Wrap-up & Sign-out", "details": ["Update lists and sign-out.", "Confirm all critical studies have been addressed."]}]}]}, {"id": "admissions", "title": "Admissions", "description": "Approach to admissions, including stabilization and initial evaluation.", "children": [{"id": "admission-overview", "title": "General Admission Approach", "description": "Systematic approach to admitting an infant to the RNICU.", "content": [{"type": "text", "content": "A structured approach to admissions helps ensure no critical steps are missed."}, {"type": "list", "style": "decimal", "title": "Initial Steps on Admission", "items": ["Confirm patient identity and gestational age.", "Assess ABCs: Airway, Breathing, Circulation.", "Check vital signs and current respiratory support.", "Place monitors (cardiac, pulse oximeter, temperature).", "Establish IV access if not already in place.", "Obtain a brief but focused history (maternal, pregnancy, delivery).", "Perform a targeted physical exam."]}, {"type": "list", "style": "disc", "title": "Key Admission Orders", "items": ["Admission diagnosis and problem list.", "Respiratory support parameters.", "Fluids, electrolytes, and nutrition orders.", "Antibiotics, if indicated.", "Laboratory studies and imaging.", "Consults if needed (e.g., cardiology, surgery)."]}]}, {"id": "respiratory-admissions", "title": "Respiratory Admissions", "description": "Admission approach for infants with respiratory distress.", "content": [{"type": "text", "content": "Infants with respiratory distress should be assessed and stabilized rapidly with attention to oxygenation, ventilation, and perfusion."}, {"type": "list", "style": "decimal", "title": "Initial Stabilization", "items": ["Assess work of breathing and oxygen saturation.", "Ensure appropriate respiratory support (CPAP, HFNC, mechanical ventilation).", "Check perfusion, heart rate, and blood pressure.", "Obtain blood gas if indicated.", "Consider differential diagnosis: TTN, RDS, PPHN, pneumonia, pneumothorax, congenital heart disease."]}, {"type": "list", "style": "disc", "title": "Key Admission Labs & Imaging", "items": ["Blood gas, CBC, blood culture (if sepsis is a concern).", "Chest X-ray.", "Consider echocardiogram if concern for structural heart disease or PPHN."]}]}]}, {"id": "transfers", "title": "Transfers", "description": "Guidance on internal and external transfers to and from the RNICU.", "children": [{"id": "incoming-transfers", "title": "Incoming Transfers", "description": "Managing infants transferred into the RNICU from other facilities.", "content": [{"type": "text", "content": "Infants may be transferred in from outside hospitals or other units within the institution. Your role is to receive, reassess, and integrate them into the RNICU care system."}, {"type": "list", "style": "disc", "title": "Key Steps on Arrival", "items": ["Repeat ABC assessment.", "Check transport records and vital sign trends.", "Clarify pending studies and treatments.", "Ensure appropriate respiratory and hemodynamic support."]}]}, {"id": "outgoing-transfers", "title": "Outgoing Transfers", "description": "Planning and executing safe transfers out of the RNICU.", "content": [{"type": "text", "content": "Transfers out of the RNICU (e.g., to step-down units or other hospitals) require careful planning and communication."}, {"type": "list", "style": "decimal", "title": "Before Transfer", "items": ["Confirm medical stability for transfer.", "Communicate with receiving team.", "Update parents on the transfer plan.", "Ensure documentation and orders are complete."]}]}]}, {"id": "discharges", "title": "Discharges", "description": "Planning and completing safe discharges home.", "children": [{"id": "discharge-planning", "title": "Discharge Planning", "description": "Preparing infants and families for discharge home.", "content": [{"type": "text", "content": "Discharging a neonate home is a major milestone. Planning should begin early, especially for infants with complex needs."}, {"type": "list", "style": "disc", "title": "Core Discharge Readiness", "items": ["Stable respiratory status in room air or on chronic home support.", "Adequate oral intake or established feeding plan (e.g., NG, G-tube).", "Parents trained in all necessary care and equipment.", "Follow-up appointments arranged.", "Medication prescriptions prepared and reconciled."]}]}]}, {"id": "procedures", "title": "Procedures", "description": "Common RNICU procedures and resident roles.", "children": [{"id": "common-procedures", "title": "Common Procedures", "description": "Overview of procedures residents may perform or assist with.", "content": [{"type": "text", "content": "Procedural exposure is an important part of the RNICU rotation. Your involvement will depend on your level of training and competence, as well as patient acuity."}, {"type": "list", "style": "disc", "title": "Typical Procedures", "items": ["Umbilical line placement (UAC/UVC).", "Peripheral IV placement.", "Lumbar punctures.", "Endotracheal intubation.", "Arterial line placement (less common for residents)."]}, {"type": "text", "content": "Always verify supervision requirements, obtain consent when appropriate, and follow sterile technique."}]}]}, {"id": "medications", "title": "Medications", "description": "High-yield medication guidance for the RNICU.", "children": [{"id": "antibiotics", "title": "Antibiotics", "description": "Common antibiotic regimens in the RNICU.", "content": [{"type": "text", "content": "Dosing in neonates is weight-, age-, and gestation-dependent. Always verify doses with current institutional references."}, {"type": "list", "style": "disc", "title": "Common Regimens", "items": ["Ampicillin + Gentamicin for early onset sepsis coverage.", "Add Vancomycin if concern for line infection or MRSA.", "Broaden coverage as per attending guidance and culture data."]}]}, {"id": "sedation-analgesia", "title": "Sedation & Analgesia", "description": "Pain control and sedation basics in the RNICU.", "content": [{"type": "text", "content": "Balancing adequate pain control with safety is crucial."}, {"type": "list", "style": "disc", "title": "General Principles", "items": ["Use non-pharmacologic comfort measures whenever possible.", "For procedural pain, consider sucrose, topical anesthetics, and appropriate systemic medications.", "Monitor for respiratory depression and hypotension with opioids and sedatives."]}]}]}, {"id": "neonatal-resuscitation", "title": "Neonatal Resuscitation", "description": "Core principles of neonatal resuscitation in the delivery room and RNICU.", "children": [{"id": "npr-overview", "title": "NRP Core Steps", "description": "Summary of Neonatal Resuscitation Program (NRP) priorities.", "content": [{"type": "text", "content": "The Neonatal Resuscitation Program (NRP) provides a standardized algorithm for responding to compromised neonates at birth."}, {"type": "list", "style": "decimal", "title": "Initial Steps", "items": ["Warm, dry, stimulate.", "Position airway and clear if necessary.", "Assess breathing and heart rate."]}, {"type": "list", "style": "disc", "title": "Positive Pressure Ventilation (PPV)", "items": ["Begin PPV if heart rate <100 bpm and baby is apneic or gasping.", "Use appropriate mask size and ensure a good seal.", "Monitor chest rise and adjust pressures as needed."]}, {"type": "list", "style": "disc", "title": "Chest Compressions", "items": ["Start compressions if heart rate remains <60 bpm after 30 seconds of effective PPV.", "Coordinate compressions with ventilations in a 3:1 ratio.", "Reassess heart rate every 60 seconds."]}]}]}]};
+        const WHITEBOOK_DATA = {"sections": [{"id": "introduction", "title": "Introduction & Overview", "description": "Welcome to the RNICU White Book for Pediatric Residents. This guide is designed to support you during your rotation with practical, concise, and clinically relevant information.", "children": [{"id": "rotation-overview", "title": "Rotation Overview", "description": "What to expect during your RNICU rotation.", "content": [{"type": "text", "content": "Welcome to the Regional Neonatal Intensive Care Unit (RNICU). During this rotation, you will care for critically ill neonates and learn key skills in neonatal resuscitation, stabilization, and ongoing management."}, {"type": "list", "style": "disc", "title": "Goals of the Rotation", "items": ["Develop a structured approach to the assessment and management of sick neonates.", "Become familiar with common RNICU protocols and pathways.", "Understand when to escalate care and involve subspecialty services.", "Work effectively within a multidisciplinary NICU team."]}, {"type": "list", "style": "decimal", "title": "Your Responsibilities", "items": ["Pre-rounding and presenting on assigned patients.", "Writing daily notes and orders under supervision.", "Participating in family discussions and care conferences, as appropriate.", "Attending and participating in resuscitations, admissions, and procedures.", "Communicating effectively with nursing staff and respiratory therapists."]}]}, {"id": "daily-schedule", "title": "Daily Schedule & Workflow", "description": "Structure of a typical RNICU day.", "content": [{"type": "text", "content": "The daily flow in the RNICU can be busy and dynamic. Having a mental map of the day will help you stay organized and reduce stress."}, {"type": "timeline", "title": "Typical RNICU Weekday Schedule", "items": [{"time": "06:30\u201307:00", "title": "Pre-rounding", "details": ["Review overnight events in the chart.", "Check vital signs, respiratory support, and labs.", "Examine your assigned babies.", "Formulate a daily plan for each patient."]}, {"time": "07:00\u201307:30", "title": "Team Huddle / Sign-out", "details": ["Receive handoff from night team.", "Clarify any urgent issues or pending studies."]}, {"time": "07:30\u201311:30", "title": "Morning Rounds", "details": ["Structured patient presentations.", "Discuss active problems and plans.", "Order entry during or immediately after rounds."]}, {"time": "11:30\u201316:30", "title": "Procedures, Notes, and Follow-up", "details": ["Write notes.", "Follow up labs and imaging.", "Participate in admissions, resuscitations, and procedures."]}, {"time": "16:30\u201317:30", "title": "Evening Wrap-up & Sign-out", "details": ["Update lists and sign-out.", "Confirm all critical studies have been addressed."]}]}]}, {"id": "admissions", "title": "Admissions", "description": "Approach to admissions, including stabilization and initial evaluation.", "children": [{"id": "admission-overview", "title": "General Admission Approach", "description": "Systematic approach to admitting an infant to the RNICU.", "content": [{"type": "text", "content": "A structured approach to admissions helps ensure no critical steps are missed."}, {"type": "list", "style": "decimal", "title": "Initial Steps on Admission", "items": ["Confirm patient identity and gestational age.", "Assess ABCs: Airway, Breathing, Circulation.", "Check vital signs and current respiratory support.", "Place monitors (cardiac, pulse oximeter, temperature).", "Establish IV access if not already in place.", "Obtain a brief but focused history (maternal, pregnancy, delivery).", "Perform a targeted physical exam."]}, {"type": "list", "style": "disc", "title": "Key Admission Orders", "items": ["Admission diagnosis and problem list.", "Respiratory support parameters.", "Fluids, electrolytes, and nutrition orders.", "Antibiotics, if indicated.", "Laboratory studies and imaging.", "Consults if needed (e.g., cardiology, surgery)."]}]}, {"id": "respiratory-admissions", "title": "Respiratory Admissions", "description": "Admission approach for infants with respiratory distress.", "content": [{"type": "text", "content": "Infants with respiratory distress should be assessed and stabilized rapidly with attention to oxygenation, ventilation, and perfusion."}, {"type": "list", "style": "decimal", "title": "Initial Stabilization", "items": ["Assess work of breathing and oxygen saturation.", "Ensure appropriate respiratory support (CPAP, HFNC, mechanical ventilation).", "Check perfusion, heart rate, and blood pressure.", "Obtain blood gas if indicated.", "Consider differential diagnosis: TTN, RDS, PPHN, pneumonia, pneumothorax, congenital heart disease."]}, {"type": "list", "style": "disc", "title": "Key Admission Labs & Imaging", "items": ["Blood gas, CBC, blood culture (if sepsis is a concern).", "Chest X-ray.", "Consider echocardiogram if concern for structural heart disease or PPHN."]}]}]}, {"id": "transfers", "title": "Transfers", "description": "Guidance on internal and external transfers to and from the RNICU.", "children": [{"id": "incoming-transfers", "title": "Incoming Transfers", "description": "Managing infants transferred into the RNICU from other facilities.", "content": [{"type": "text", "content": "Infants may be transferred in from outside hospitals or other units within the institution. Your role is to receive, reassess, and integrate them into the RNICU care system."}, {"type": "list", "style": "disc", "title": "Key Steps on Arrival", "items": ["Repeat ABC assessment.", "Check transport records and vital sign trends.", "Clarify pending studies and treatments.", "Ensure appropriate respiratory and hemodynamic support."]}]}, {"id": "outgoing-transfers", "title": "Outgoing Transfers", "description": "Planning and executing safe transfers out of the RNICU.", "content": [{"type": "text", "content": "Transfers out of the RNICU (e.g., to step-down units or other hospitals) require careful planning and communication."}, {"type": "list", "style": "decimal", "title": "Before Transfer", "items": ["Confirm medical stability for transfer.", "Communicate with receiving team.", "Update parents on the transfer plan.", "Ensure documentation and orders are complete."]}]}]}, {"id": "discharges", "title": "Discharges", "description": "Planning and completing safe discharges home.", "children": [{"id": "discharge-planning", "title": "Discharge Planning", "description": "Preparing infants and families for discharge home.", "content": [{"type": "text", "content": "Discharging a neonate home is a major milestone. Planning should begin early, especially for infants with complex needs."}, {"type": "list", "style": "disc", "title": "Core Discharge Readiness", "items": ["Stable respiratory status in room air or on chronic home support.", "Adequate oral intake or established feeding plan (e.g., NG, G-tube).", "Parents trained in all necessary care and equipment.", "Follow-up appointments arranged.", "Medication prescriptions prepared and reconciled."]}]}]}, {"id": "procedures", "title": "Procedures", "description": "Common RNICU procedures and resident roles.", "children": [{"id": "common-procedures", "title": "Common Procedures", "description": "Overview of procedures residents may perform or assist with.", "content": [{"type": "text", "content": "Procedural exposure is an important part of the RNICU rotation. Your involvement will depend on your level of training and competence, as well as patient acuity."}, {"type": "list", "style": "disc", "title": "Typical Procedures", "items": ["Umbilical line placement (UAC/UVC).", "Peripheral IV placement.", "Lumbar punctures.", "Endotracheal intubation.", "Arterial line placement (less common for residents)."]}, {"type": "text", "content": "Always verify supervision requirements, obtain consent when appropriate, and follow sterile technique."}]}]}, {"id": "medications", "title": "Medications", "description": "High-yield medication guidance for the RNICU.", "children": [{"id": "antibiotics", "title": "Antibiotics", "description": "Common antibiotic regimens in the RNICU.", "content": [{"type": "text", "content": "Dosing in neonates is weight-, age-, and gestation-dependent. Always verify doses with current institutional references."}, {"type": "list", "style": "disc", "title": "Common Regimens", "items": ["Ampicillin + Gentamicin for early onset sepsis coverage.", "Add Vancomycin if concern for line infection or MRSA.", "Broaden coverage as per attending guidance and culture data."]}]}, {"id": "sedation-analgesia", "title": "Sedation & Analgesia", "description": "Pain control and sedation basics in the RNICU.", "content": [{"type": "text", "content": "Balancing adequate pain control with safety is crucial."}, {"type": "list", "style": "disc", "title": "General Principles", "items": ["Use non-pharmacologic comfort measures whenever possible.", "For procedural pain, consider sucrose, topical anesthetics, and appropriate systemic medications.", "Monitor for respiratory depression and hypotension with opioids and sedatives."]}]}]}, {"id": "neonatal-resuscitation", "title": "Neonatal Resuscitation", "description": "Core principles of neonatal resuscitation in the delivery room and RNICU.", "children": [{"id": "nrp-overview", "title": "NRP Core Steps", "description": "Summary of Neonatal Resuscitation Program (NRP) priorities.", "content": [{"type": "text", "content": "The Neonatal Resuscitation Program (NRP) provides a standardized algorithm for responding to compromised neonates at birth."}, {"type": "list", "style": "decimal", "title": "Initial Steps", "items": ["Warm, dry, stimulate.", "Position airway and clear if necessary.", "Assess breathing and heart rate."]}, {"type": "list", "style": "disc", "title": "Positive Pressure Ventilation (PPV)", "items": ["Begin PPV if heart rate <100 bpm and baby is apneic or gasping.", "Use appropriate mask size and ensure a good seal.", "Monitor chest rise and adjust pressures as needed."]}, {"type": "list", "style": "disc", "title": "Chest Compressions", "items": ["Start compressions if heart rate remains <60 bpm after 30 seconds of effective PPV.", "Coordinate compressions with ventilations in a 3:1 ratio.", "Reassess heart rate every 60 seconds."]}]}]}]};
 
         // Helper: find section by id recursively
         function findSectionById(id) {
@@ -302,16 +238,18 @@
 
             if (!isAuthenticated) {
                 return (
-                    <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
-                        <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
+                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
                             <div className="text-center mb-6">
-                                <i className="fas fa-baby text-6xl text-indigo-600 mb-4"></i>
-                                <h1 className="text-3xl font-bold text-gray-800 mb-2">RNICU Resident Guide</h1>
-                                <p className="text-gray-600">Interactive Clinical Protocol Resource</p>
+                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full gradient-bg text-white shadow-lg mb-4">
+                                    <i className="fas fa-baby text-3xl"></i>
+                                </div>
+                                <h1 className="text-2xl font-bold text-gray-800 mb-1">RNICU Resident Guide</h1>
+                                <p className="text-gray-500 text-sm">Interactive clinical protocols & quick-reference guidance</p>
                             </div>
-                            <form onSubmit={handleLogin}>
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-semibold mb-2">
+                            <form onSubmit={handleLogin} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Access Password
                                     </label>
                                     <input
@@ -323,20 +261,20 @@
                                         autoFocus
                                     />
                                     {passwordError && (
-                                        <p className="text-red-500 text-sm mt-2">{passwordError}</p>
+                                        <p className="text-sm text-red-500 mt-1">{passwordError}</p>
                                     )}
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200"
+                                    className="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
+                                    <i className="fas fa-unlock-alt mr-2"></i>
                                     Access Guide
                                 </button>
                             </form>
-                            <div className="mt-6 text-center text-sm text-gray-500">
-                                <i className="fas fa-lock mr-1"></i>
-                                For authorized personnel only
-                            </div>
+                            <p className="mt-4 text-xs text-center text-gray-400">
+                                For authorized RNICU staff and trainees only.
+                            </p>
                         </div>
                     </div>
                 );
@@ -345,77 +283,61 @@
             return (
                 <div className="min-h-screen bg-gray-50">
                     {/* Header */}
-                    <header className="sticky-header border-b border-gray-200 shadow-sm">
-                        <div className="max-w-7xl mx-auto px-4 py-4">
-                            <div className="flex items-center justify-between mb-3">
-                                <button
-                                    onClick={() => {
-                                        setView('home');
-                                        setSearchQuery('');
-                                        setSearchResults([]);
-                                        setSelectedSection(null);
-                                    }}
-                                    className="flex items-center space-x-2 text-indigo-600"
-                                >
-                                    <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center">
-                                        <i className="fas fa-baby text-indigo-600"></i>
-                                    </div>
-                                    <div className="text-left">
-                                        <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-                                            RNICU White Book
-                                        </div>
-                                        <div className="text-sm font-semibold text-gray-800">
-                                            Resident Guide
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <div className="flex items-center space-x-2">
-                                    <span className="hidden sm:inline-flex items-center text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-                                        <span className="w-2 h-2 bg-emerald-500 rounded-full mr-1.5"></span>
-                                        Internal use only
-                                    </span>
-                                    <button
-                                        onClick={() => setView('ai')}
-                                        className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${
-                                            view === 'ai'
-                                                ? 'bg-indigo-600 text-white shadow-sm'
-                                                : 'bg-white text-indigo-600 border border-indigo-600'
-                                        }`}
-                                    >
-                                        <i className="fas fa-comments"></i>
-                                        <span className="hidden sm:inline">AI Assistant</span>
-                                    </button>
+                    <header className="sticky-header border-b border-gray-200">
+                        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white shadow">
+                                    <i className="fas fa-baby text-xl"></i>
+                                </div>
+                                <div>
+                                    <h1 className="text-sm font-semibold text-gray-800">
+                                        RNICU Resident White Book
+                                    </h1>
+                                    <p className="text-xs text-gray-500">
+                                        Quick protocols, workflows & reference for pediatric residents
+                                    </p>
                                 </div>
                             </div>
-                            
-                            {/* Search Bar */}
+                            <div className="flex items-center space-x-2">
+                                <button
+                                    onClick={() => setView('ai')}
+                                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
+                                        view === 'ai'
+                                            ? 'bg-indigo-600 text-white shadow'
+                                            : 'bg-white text-indigo-600 border border-indigo-200'
+                                    }`}
+                                >
+                                    <i className="fas fa-comments mr-1.5"></i>
+                                    AI Assistant
+                                </button>
+                                <span className="hidden sm:inline-flex items-center px-2 py-1 text-[0.65rem] font-medium bg-green-50 text-green-700 rounded-full border border-green-100">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                                    Internal Use Only
+                                </span>
+                            </div>
+                        </div>
+                        <div className="max-w-7xl mx-auto px-4 pb-3">
                             <div className="relative">
-                                <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
                                 <input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => handleSearch(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
-                                    placeholder="Search protocols, topics, or key words..."
+                                    className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                                    placeholder="Search topics, e.g. 'sepsis', 'PPHN', 'feeds'..."
                                 />
                             </div>
                         </div>
                     </header>
 
                     {/* Main Layout */}
-                    <main className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <main className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
                         {/* Sidebar */}
-                        <aside className="lg:col-span-1">
-                            <div className="content-card p-4 sticky top-24">
-                                <div className="flex items-center justify-between mb-3">
-                                    <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                                        Systems & Workflows
-                                    </h2>
-                                    <span className="badge-soft">
-                                        {WHITEBOOK_DATA.sections.length} sections
-                                    </span>
-                                </div>
+                        <aside className="lg:col-span-1 mb-4 lg:mb-0">
+                            <div className="bg-white rounded-lg content-card p-4">
+                                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                                    Sections
+                                </h2>
                                 <nav className="space-y-1 text-sm">
                                     {WHITEBOOK_DATA.sections.map(section => (
                                         <button
@@ -424,21 +346,14 @@
                                                 setSelectedSection(section);
                                                 setView('content');
                                             }}
-                                            className={`w-full text-left px-3 py-2 rounded-lg sidebar-link ${
-                                                selectedSection?.id === section.id
-                                                    ? 'sidebar-link-active'
-                                                    : ''
+                                            className={`w-full flex flex-col text-left px-3 py-2 rounded-md hover:bg-indigo-50 ${
+                                                selectedSection?.id === section.id ? 'bg-indigo-50 border border-indigo-100' : ''
                                             }`}
                                         >
-                                            <div className="flex items-center justify-between">
-                                                <span className="font-medium">{section.title}</span>
-                                                <span className="text-xs text-gray-400 ml-2">
-                                                    {section.children?.length || 0} topics
-                                                </span>
-                                            </div>
-                                            <p className="text-xs text-gray-500 mt-0.5">
+                                            <span className="font-medium text-gray-800">{section.title}</span>
+                                            <span className="text-xs text-gray-500">
                                                 {section.description}
-                                            </p>
+                                            </span>
                                         </button>
                                     ))}
                                 </nav>
@@ -448,59 +363,44 @@
                         {/* Main content area */}
                         <section className="lg:col-span-3 space-y-4">
                             {/* View Tabs */}
-                            <div className="flex flex-wrap items-center justify-between gap-2">
-                                <div className="inline-flex items-center bg-gray-100 p-1 rounded-full">
+                            <div className="flex items-center justify-between">
+                                <div className="inline-flex items-center bg-gray-100 rounded-full p-1 text-xs">
                                     <button
                                         onClick={() => setView('home')}
-                                        className={`pill-tab px-3 py-1.5 text-xs font-medium ${
-                                            view === 'home'
-                                                ? 'bg-white text-gray-900 shadow-sm'
-                                                : 'text-gray-500'
+                                        className={`px-3 py-1 rounded-full ${
+                                            view === 'home' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
                                         }`}
                                     >
                                         Overview
                                     </button>
                                     <button
                                         onClick={() => setView('browse')}
-                                        className={`pill-tab px-3 py-1.5 text-xs font-medium ${
-                                            view === 'browse'
-                                                ? 'bg-white text-gray-900 shadow-sm'
-                                                : 'text-gray-500'
+                                        className={`px-3 py-1 rounded-full ${
+                                            view === 'browse' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
                                         }`}
                                     >
                                         Browse
                                     </button>
                                     <button
                                         onClick={() => searchResults.length && setView('search')}
-                                        className={`pill-tab px-3 py-1.5 text-xs font-medium ${
-                                            view === 'search'
-                                                ? 'bg-white text-gray-900 shadow-sm'
-                                                : 'text-gray-500'
+                                        className={`px-3 py-1 rounded-full ${
+                                            view === 'search' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
                                         }`}
                                     >
                                         Search Results
                                     </button>
                                     <button
                                         onClick={() => selectedSection && setView('content')}
-                                        className={`pill-tab px-3 py-1.5 text-xs font-medium ${
-                                            view === 'content'
-                                                ? 'bg-white text-gray-900 shadow-sm'
-                                                : 'text-gray-500'
+                                        className={`px-3 py-1 rounded-full ${
+                                            view === 'content' ? 'bg-white shadow text-gray-900' : 'text-gray-500'
                                         }`}
                                     >
                                         Current Topic
                                     </button>
                                 </div>
-
-                                <div className="flex items-center space-x-2 text-xs text-gray-500">
-                                    <span className="inline-flex items-center">
-                                        <span className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
-                                        Stable
-                                    </span>
-                                    <span className="hidden sm:inline">
-                                        This tool supplements, but does not replace, attending guidance.
-                                    </span>
-                                </div>
+                                <p className="hidden sm:block text-[0.65rem] text-gray-500">
+                                    This guide supplements, but does not replace, attending and fellow supervision.
+                                </p>
                             </div>
 
                             {/* Conditional Views */}
@@ -541,11 +441,12 @@
 
             return (
                 <div className="space-y-6">
-                    <div className="bg-white rounded-lg shadow-md p-6">
+                    <div className="bg-white rounded-lg content-card p-6">
                         <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome to the RNICU Guide</h2>
-                        <p className="text-gray-600">
-                            Your interactive clinical protocol resource for the Regional NICU. Use the quick links below to jump into high-yield areas, explore by system, or search for specific topics.
-                            This guide is meant to support your clinical judgment and attending guidance.
+                        <p className="text-gray-600 text-sm">
+                            Your interactive clinical protocol resource for the Regional NICU. Use the quick links
+                            below to jump into high-yield areas, browse by system, or search for specific topics.
+                            This tool is designed to support, not replace, bedside teaching and supervision.
                         </p>
                     </div>
 
@@ -563,12 +464,12 @@
                                             onSectionClick(item.id);
                                         }
                                     }}
-                                    className="section-card bg-white rounded-lg shadow-md p-4 text-left hover:shadow-lg transition"
+                                    className="section-card bg-white rounded-lg content-card p-4 text-left hover:shadow-lg transition"
                                 >
                                     <div className={`${item.color} w-12 h-12 rounded-full flex items-center justify-center mb-3`}>
                                         <i className={`fas ${item.icon} text-white text-xl`}></i>
                                     </div>
-                                    <h4 className="font-semibold text-gray-800">{item.title}</h4>
+                                    <h4 className="font-semibold text-gray-800 text-sm">{item.title}</h4>
                                 </button>
                             ))}
                         </div>
@@ -580,9 +481,9 @@
                             <h3 className="text-lg font-semibold text-gray-800">Browse by System</h3>
                             <button
                                 onClick={onNavigate}
-                                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                                className="text-indigo-600 font-semibold text-sm hover:underline"
                             >
-                                View all sections <i className="fas fa-arrow-right ml-1"></i>
+                                View All →
                             </button>
                         </div>
                         <div className="grid sm:grid-cols-2 gap-4">
@@ -590,11 +491,11 @@
                                 <button
                                     key={section.id}
                                     onClick={() => onSectionClick(section.id)}
-                                    className="section-card bg-white rounded-lg shadow-md p-4 text-left hover:shadow-lg transition"
+                                    className="section-card bg-white rounded-lg content-card p-4 text-left hover:shadow-md transition"
                                 >
-                                    <h4 className="font-semibold text-gray-800 mb-2">{section.title}</h4>
-                                    <p className="text-sm text-gray-600">
-                                        {section.children?.length || 0} topics
+                                    <h4 className="font-semibold text-gray-800 mb-1 text-sm">{section.title}</h4>
+                                    <p className="text-xs text-gray-600">
+                                        {section.description}
                                     </p>
                                 </button>
                             ))}
@@ -606,23 +507,22 @@
 
         function BrowseView({ onSectionClick }) {
             return (
-                <div className="space-y-4 fade-in">
-                    <div className="bg-white rounded-lg shadow-md p-4">
+                <div className="space-y-4">
+                    <div className="bg-white rounded-lg content-card p-4">
                         <h2 className="text-xl font-semibold text-gray-800 mb-1">Browse All Sections</h2>
                         <p className="text-sm text-gray-600">
-                            Click a section to see its topics and detailed content.
+                            Click a section to see its topics and detailed workflow/content.
                         </p>
                     </div>
-
                     <div className="grid md:grid-cols-2 gap-4">
                         {WHITEBOOK_DATA.sections.map(section => (
-                            <div key={section.id} className="content-card p-4">
+                            <div key={section.id} className="bg-white rounded-lg content-card p-4">
                                 <div className="flex items-start justify-between mb-2">
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-800">{section.title}</h3>
                                         <p className="text-sm text-gray-600">{section.description}</p>
                                     </div>
-                                    <span className="badge-soft">
+                                    <span className="text-xs text-gray-500">
                                         {section.children?.length || 0} topics
                                     </span>
                                 </div>
@@ -631,10 +531,10 @@
                                         <button
                                             key={child.id}
                                             onClick={() => onSectionClick(child.id)}
-                                            className="w-full text-left px-3 py-1.5 rounded-md hover:bg-indigo-50 text-sm flex items-center justify-between"
+                                            className="w-full flex items-center justify-between text-left px-3 py-1.5 rounded-md hover:bg-indigo-50 text-sm"
                                         >
                                             <span className="text-gray-800">{child.title}</span>
-                                            <i className="fas fa-arrow-right text-xs text-gray-400"></i>
+                                            <i className="fas fa-chevron-right text-xs text-gray-400"></i>
                                         </button>
                                     ))}
                                 </div>
@@ -648,34 +548,33 @@
         function SearchResults({ results, onResultClick }) {
             if (!results.length) {
                 return (
-                    <div className="content-card p-6 fade-in">
+                    <div className="bg-white rounded-lg content-card p-6">
                         <h2 className="text-xl font-semibold text-gray-800 mb-2">No Results</h2>
                         <p className="text-sm text-gray-600">
-                            Try a different keyword, or browse by system using the tabs above.
+                            Try different keywords, or browse by system using the tabs above.
                         </p>
                     </div>
                 );
             }
 
             return (
-                <div className="space-y-4 fade-in">
-                    <div className="bg-white rounded-lg shadow-md p-4">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-1">Search Results</h2>
+                <div className="space-y-3">
+                    <div className="bg-white rounded-lg content-card p-4">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-1">Search Results</h2>
                         <p className="text-sm text-gray-600">
                             {results.length} result{results.length !== 1 ? 's' : ''} found.
                         </p>
                     </div>
-
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         {results.map(result => (
                             <button
                                 key={`${result.type}-${result.id}`}
                                 onClick={() => onResultClick(result.id)}
-                                className="w-full text-left content-card p-4 hover:shadow-lg transition flex items-start justify-between"
+                                className="w-full flex items-start justify-between bg-white rounded-lg content-card px-4 py-3 hover:shadow-md transition text-left"
                             >
                                 <div>
                                     <div className="flex items-center space-x-2 mb-1">
-                                        <span className="badge-soft">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-indigo-50 text-indigo-700">
                                             {result.type === 'section'
                                                 ? 'Section'
                                                 : result.type === 'topic'
@@ -690,7 +589,7 @@
                                     </div>
                                     <h3 className="text-sm font-semibold text-gray-800">{result.title}</h3>
                                     {result.description && (
-                                        <p className="text-xs text-gray-600 mt-1">
+                                        <p className="text-xs text-gray-600 mt-0.5">
                                             {result.description}
                                         </p>
                                     )}
@@ -710,42 +609,35 @@
             );
 
             return (
-                <div className="space-y-4 fade-in">
-                    <div className="content-card p-5">
+                <div className="space-y-4">
+                    <div className="bg-white rounded-lg content-card p-5">
                         <div className="flex items-start justify-between">
                             <div>
-                                <div className="flex items-center space-x-2 mb-2">
+                                <div className="flex items-center space-x-2 mb-1">
                                     {parentSection && (
-                                        <span className="badge-soft">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-indigo-50 text-indigo-700">
                                             {parentSection.title}
                                         </span>
                                     )}
-                                    <span className="badge-soft-amber">
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-gray-100 text-gray-700">
                                         {isParent ? 'Section Overview' : 'Topic'}
                                     </span>
                                 </div>
-                                <h2 className="text-xl font-semibold text-gray-800">
-                                    {section.title}
-                                </h2>
+                                <h2 className="text-xl font-semibold text-gray-800">{section.title}</h2>
                                 {section.description && (
                                     <p className="text-sm text-gray-600 mt-1">
                                         {section.description}
                                     </p>
                                 )}
                             </div>
-                            <div className="flex flex-col items-end space-y-1">
-                                <span className="text-xs text-gray-400">
-                                    RNICU Resident White Book
-                                </span>
-                                {parentSection && (
-                                    <button
-                                        onClick={() => onNavigate(parentSection.id)}
-                                        className="text-xs text-indigo-600 hover:text-indigo-800"
-                                    >
-                                        Back to {parentSection.title}
-                                    </button>
-                                )}
-                            </div>
+                            {parentSection && (
+                                <button
+                                    onClick={() => onNavigate(parentSection.id)}
+                                    className="text-xs text-indigo-600 hover:underline"
+                                >
+                                    ← Back to {parentSection.title}
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -755,7 +647,7 @@
                                 <button
                                     key={child.id}
                                     onClick={() => onNavigate(child.id)}
-                                    className="content-card p-4 text-left hover:shadow-lg transition"
+                                    className="bg-white rounded-lg content-card p-4 text-left hover:shadow-md transition"
                                 >
                                     <h3 className="text-sm font-semibold text-gray-800 mb-1">
                                         {child.title}
@@ -763,7 +655,7 @@
                                     <p className="text-xs text-gray-600">
                                         {child.description}
                                     </p>
-                                    <div className="mt-2 flex items-center text-xs text-gray-400">
+                                    <div className="mt-2 flex items-center text-[0.65rem] text-gray-500">
                                         <i className="fas fa-arrow-right mr-1"></i>
                                         View details
                                     </div>
@@ -771,11 +663,11 @@
                             ))}
                         </div>
                     ) : (
-                        <div className="content-card p-5 space-y-4">
+                        <div className="bg-white rounded-lg content-card p-5 space-y-4 text-sm text-gray-800 leading-relaxed">
                             {section.content?.map((block, index) => {
                                 if (block.type === 'text') {
                                     return (
-                                        <p key={index} className="text-sm text-gray-800 leading-relaxed">
+                                        <p key={index}>
                                             {block.content}
                                         </p>
                                     );
@@ -789,11 +681,11 @@
                                                     {block.title}
                                                 </h3>
                                             )}
-                                            <ul className={`pl-5 text-sm text-gray-800 ${
+                                            <ul className={`pl-5 ${
                                                 block.style === 'decimal' ? 'list-decimal' : 'list-disc'
                                             }`}>
                                                 {block.items.map((item, i) => (
-                                                    <li key={i} className="mb-1">
+                                                    <li key={i} className="mb-0.5">
                                                         {item}
                                                     </li>
                                                 ))}
@@ -811,17 +703,17 @@
                                                 </h3>
                                             )}
                                             <div className="relative pl-5">
-                                                <div className="timeline-line absolute left-1 top-0 bottom-0"></div>
+                                                <div className="absolute left-1 top-0 bottom-0 w-0.5 bg-indigo-200"></div>
                                                 <div className="space-y-4">
                                                     {block.items.map((item, i) => (
-                                                        <div key={i} className="relative pl-4">
+                                                        <div key={i} className="relative pl-3">
                                                             <div className="absolute left-[-6px] top-1 w-3 h-3 rounded-full bg-indigo-500 border-2 border-white shadow"></div>
                                                             <div className="bg-indigo-50 rounded-lg p-3">
                                                                 <div className="flex items-center justify-between mb-1">
                                                                     <span className="text-xs font-semibold text-indigo-700">
                                                                         {item.time}
                                                                     </span>
-                                                                    <span className="badge-soft">
+                                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-white text-indigo-700 border border-indigo-100">
                                                                         Step {i + 1}
                                                                     </span>
                                                                 </div>
@@ -854,7 +746,7 @@
 
         function AiAssistantView({ messages, input, setInput, onSubmit, isThinking, messagesEndRef }) {
             return (
-                <div className="content-card h-[480px] flex flex-col fade-in">
+                <div className="bg-white rounded-lg content-card h-[480px] flex flex-col">
                     <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                             <div className="w-8 h-8 rounded-full ai-bubble flex items-center justify-center text-white">
@@ -865,12 +757,12 @@
                                     RNICU AI Assistant
                                 </h2>
                                 <p className="text-xs text-gray-500">
-                                    Ask \"What should I do next?\", dosing ranges, or pathway questions.
+                                    Ask "What should I do next?", dosing ranges, or pathway questions.
                                 </p>
                             </div>
                         </div>
-                        <span className="badge-soft-red text-[0.65rem]">
-                            Beta – always confirm with attending
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-red-50 text-red-700 border border-red-100">
+                            Beta \u2013 always confirm with attending
                         </span>
                     </div>
 
